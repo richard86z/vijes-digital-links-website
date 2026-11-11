@@ -146,6 +146,14 @@
         if (field) field.value = link.getAttribute('data-service');
       });
     });
+    try {
+      var savedService = sessionStorage.getItem('vijes-service');
+      if (savedService) {
+        var serviceField = document.getElementById('service');
+        if (serviceField) serviceField.value = savedService;
+        sessionStorage.removeItem('vijes-service');
+      }
+    } catch (error) { /* Storage may be unavailable; the enquiry form remains usable. */ }
     document.getElementById('enquiry-form').addEventListener('submit', function(event) {
       event.preventDefault();
       var form = event.currentTarget;
