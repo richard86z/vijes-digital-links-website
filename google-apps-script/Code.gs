@@ -1,14 +1,8 @@
 /**
  * Vijes Digital Links — website enquiry backend
- * Deploy as a Google Apps Script Web App:
- * Execute as: Me
- * Who has access: Anyone
- *
- * On first run, initialiseVijesEnquirySystem() creates a private Google Sheet
- * and stores its ID in Script Properties. The public web app accepts only
- * enquiry submissions; it never exposes sheet-reading functions.
+ * Deploy as a Web App: Execute as Me; Who has access: Anyone.
+ * The spreadsheet remains private; this endpoint accepts submissions only.
  */
-
 const CONFIG = {
   INBOX: 'vijesdigitallinks@gmail.com',
   SHEET_NAME: 'Vijes Website Enquiries',
@@ -51,10 +45,12 @@ function initialiseVijesEnquirySystem() {
 }
 
 function doPost(e) {
+  const p = (e && e.parameter) ? e.parameter : {};
+  const token = String(p.requestToken || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 100);
+
   try {
-    const p = (e && e.parameter) ? e.parameter : {};
-    // Honeypot field: bots commonly fill hidden fields.
-    if (String(p.website || '').trim()) return json_({ ok: true });
+    // Hidden honeypot: silently discard likely bot submissions.
+    if (String(p.website || '').trim()) return responsePage_({ ok: true }, token);
 
     const name = clean_(p.name, CONFIG.MAX_NAME);
     const organisation = clean_(p.organisation, CONFIG.MAX_ORG);
@@ -63,9 +59,15 @@ function doPost(e) {
     const details = clean_(p.details, CONFIG.MAX_DETAILS);
     const consent = String(p.marketingConsent || '') === 'yes';
 
-    if (!name || !email || !service || !details) return json_({ ok: false, error: 'Please complete all required fields.' });
-    if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) return json_({ ok: false, error: 'Please enter a valid email address.' });
-    if (CONFIG.ALLOWED_SERVICES.indexOf(service) === -1) return json_({ ok: false, error: 'Invalid service selection.' });
+    if (!name || !email || !service || !details) {
+      return responsePage_({ ok: false, error: 'Please complete all required fields.' }, token);
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return responsePage_({ ok: false, error: 'Please enter a valid email address.' }, token);
+    }
+    if (CONFIG.ALLOWED_SERVICES.indexOf(service) === -1) {
+      return responsePage_({ ok: false, error: 'Invalid service selection.' }, token);
+    }
 
     const lock = LockService.getScriptLock();
     lock.waitLock(10000);
@@ -74,51 +76,98 @@ function doPost(e) {
       const key = 'submission_' + Utilities.base64EncodeWebSafe(
         Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, email + '|' + details)
       );
-      if (cache.get(key)) return json_({ ok: false, error: 'This enquiry was already received recently.' });
-      cache.put(key, '1', 60);
-      
+      if (cache.get(key)) {
+        return responsePage_({ ok: false, error: 'This enquiry was already received recently.' }, token);
+      }
+
       const sheetId = PropertiesService.getScriptProperties().getProperty('VIJES_SHEET_ID');
       if (!sheetId) throw new Error('Enquiry system has not been initialised.');
       const sheet = SpreadsheetApp.openById(sheetId).getSheetByName('Enquiries');
+      if (!sheet) throw new Error('Enquiries sheet is missing.');
+
       const now = new Date();
-      sheet.appendRow([now, name, organisation, email, service, details, consent ? 'Yes' : 'No', consent ? now : '', 'New']);
+      sheet.appendRow([
+        now, safeCell_(name), safeCell_(organisation), safeCell_(email),
+        safeCell_(service), safeCell_(details), consent ? 'Yes' : 'No',
+        consent ? now : '', 'New'
+      ]);
+      cache.put(key, '1', 60);
 
-      const subject = 'New website enquiry — ' + service;
-      const body = [
-        'A new enquiry was submitted through vijesdigitallinks.online.',
-        '',
-        'Name: ' + name,
-        'Organisation: ' + (organisation || 'Not provided'),
-        'Email: ' + email,
-        'Service: ' + service,
-        'Marketing updates consent: ' + (consent ? 'YES' : 'NO'),
-        '',
-        'Project details:',
-        details,
-        '',
-        'The enquiry is saved in the private Vijes Website Enquiries spreadsheet.'
-      ].join('\\n');
-      MailApp.sendEmail(CONFIG.INBOX, subject, body, { replyTo: email, name: 'Vijes Digital Links Website' });
-
-      if (consent) {
-        const welcome = 'Thank you for choosing to receive updates from Vijes Digital Links. We may send occasional service news, useful marketing insights and company updates. You can unsubscribe at any time by replying to an email with “Unsubscribe”.';
-        MailApp.sendEmail(email, 'Your Vijes Digital Links updates preference', welcome, { name: 'Vijes Digital Links' });
+      let notificationSent = true;
+      try {
+        const subject = 'New website enquiry — ' + service;
+        const body = [
+          'A new enquiry was submitted through vijesdigitallinks.online.',
+          '',
+          'Name: ' + name,
+          'Organisation: ' + (organisation || 'Not provided'),
+          'Email: ' + email,
+          'Service: ' + service,
+          'Marketing updates consent: ' + (consent ? 'YES' : 'NO'),
+          '',
+          'Project details:',
+          details,
+          '',
+          'The enquiry is saved in the private Vijes Website Enquiries spreadsheet.'
+        ].join('\n');
+        MailApp.sendEmail({
+          to: CONFIG.INBOX,
+          subject: subject,
+          body: body,
+          replyTo: email,
+          name: 'Vijes Digital Links Website'
+        });
+      } catch (mailError) {
+        notificationSent = false;
+        console.error('Enquiry saved, but notification email failed: ' + mailError);
       }
-      return json_({ ok: true });
+
+      // Consent is recorded only. Do not start marketing mail until a managed
+      // unsubscribe/suppression process has been put in place.
+      return responsePage_({
+        ok: true,
+        notificationSent: notificationSent
+      }, token);
     } finally {
       lock.releaseLock();
     }
   } catch (err) {
     console.error(err);
-    return json_({ ok: false, error: 'We could not submit your enquiry just now. Please try again later or email vijesdigitallinks@gmail.com.' });
+    return responsePage_({
+      ok: false,
+      error: 'We could not process your enquiry just now. Please try again later or email vijesdigitallinks@gmail.com.'
+    }, token);
   }
 }
 
-function clean_(value, max) {
-  return String(value || '').replace(/[<>]/g, '').trim().slice(0, max);
+function clean_(value, maxLength) {
+  return String(value || '').replace(/[<>]/g, '').trim().slice(0, maxLength);
 }
 
-function json_(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+function safeCell_(value) {
+  const text = String(value == null ? '' : value);
+  return /^[=+\-@]/.test(text) ? "'" + text : text;
+}
+
+/*
+ * Apps Script ContentService responses are awkward for browser CORS.
+ * Return a tiny HTML response into the website's hidden iframe and use
+ * postMessage to report the result to the parent page.
+ */
+function responsePage_(result, token) {
+  const safeToken = String(token || '').replace(/[^a-zA-Z0-9_-]/g, '');
+  const payload = JSON.stringify({
+    type: 'vijes-enquiry-result',
+    token: safeToken,
+    ok: Boolean(result.ok),
+    notificationSent: Boolean(result.notificationSent),
+    error: result.error || ''
+  }).replace(/</g, '\\u003c');
+
+  const html = '<!doctype html><html><head><meta charset="utf-8"></head><body>' +
+    '<script>window.parent.postMessage(' + payload + ', "*");<\/script>' +
+    '</body></html>';
+
+  return HtmlService.createHtmlOutput(html)
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
