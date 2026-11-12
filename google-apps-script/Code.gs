@@ -19,6 +19,34 @@ const CONFIG = {
   ]
 };
 
+/**
+ * Browser health check. Opening the Web App URL sends a GET request.
+ * This confirms the deployed script and private spreadsheet are reachable.
+ */
+function doGet() {
+  let status = 'Deployment is responding, but the enquiry spreadsheet is not configured.';
+  try {
+    const id = PropertiesService.getScriptProperties().getProperty('VIJES_SHEET_ID');
+    if (id) {
+      const ss = SpreadsheetApp.openById(id);
+      const sheet = ss.getSheetByName('Enquiries');
+      status = sheet
+        ? 'Vijes enquiry endpoint is online. Private enquiry spreadsheet is connected.'
+        : 'Deployment is responding, but the Enquiries worksheet is missing.';
+    }
+  } catch (err) {
+    console.error('Health check failed: ' + err);
+    status = 'Deployment is responding, but the spreadsheet connection needs attention.';
+  }
+  return HtmlService.createHtmlOutput(
+    '<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1">' +
+    '<title>Vijes Enquiry System</title></head><body style="font:16px Arial,sans-serif;padding:32px;line-height:1.5">' +
+    '<h2>Vijes Digital Links</h2><p>' + status + '</p>' +
+    '<p>This page is a system health check; website enquiries are submitted separately.</p>' +
+    '</body></html>'
+  );
+}
+
 function initialiseVijesEnquirySystem() {
   const props = PropertiesService.getScriptProperties();
   let id = props.getProperty('VIJES_SHEET_ID');
@@ -59,7 +87,7 @@ function doPost(e) {
     const details = clean_(p.details, CONFIG.MAX_DETAILS);
     const consent = String(p.marketingConsent || '') === 'yes';
 
-    if (!name || !email || !service || !details) {
+    if (String(p.enquiryConsent || '') !== 'yes') {\n      return responsePage_({ ok: false, error: 'Please confirm that we may use your details to respond to your enquiry.' }, token);\n    }\n    if (!name || !email || !service || !details) {
       return responsePage_({ ok: false, error: 'Please complete all required fields.' }, token);
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
