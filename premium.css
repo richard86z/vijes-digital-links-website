@@ -1,0 +1,124 @@
+/* Premium responsive refinements for Vijes Digital Links.
+   Loaded after styles.css so the existing visual system and page components remain intact. */
+:root {
+  scroll-padding-top: 96px;
+  color-scheme: light;
+}
+html { overflow-x: clip; }
+body { min-width: 320px; }
+img { max-width: 100%; }
+section[id] { scroll-margin-top: 100px; }
+a, button { -webkit-tap-highlight-color: transparent; }
+button, .button, .nav-cta { min-height: 44px; }
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #b88b3e;
+  outline-offset: 4px;
+}
+.site-header {
+  min-height: 82px;
+  backdrop-filter: saturate(160%) blur(14px);
+}
+.site-header nav a { white-space: nowrap; }
+.hero { isolation: isolate; }
+.hero-copy { max-width: 660px; }
+.hero h1 { text-wrap: balance; }
+.hero-text { max-width: 590px; }
+.hero-photo { isolation: isolate; }
+.hero-photo > img, .engine-visual > img {
+  display: block;
+  width: 100%;
+}
+.hero-photo > img { object-position: center; }
+.service-card, .partner-grid article, .mission-card, .enquiry-form {
+  box-shadow: 0 8px 28px rgba(6,31,53,.045);
+}
+.service-card { height: 100%; }
+.service-card p, .partner-grid p { text-wrap: pretty; }
+.button, .service-link, .text-link, .nav-cta {
+  transition: color .2s ease, background-color .2s ease,
+              border-color .2s ease, transform .2s ease,
+              box-shadow .2s ease;
+}
+.button-primary:hover, .button-light:hover, .button-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(6,31,53,.16);
+}
+.direct-contact a { overflow-wrap: anywhere; }
+.form-row input, .form-row select, .form-row textarea {
+  min-height: 46px;
+}
+.form-row textarea { min-height: 116px; }
+.consent { cursor: pointer; }
+.consent input { width: 17px; height: 17px; flex: 0 0 auto; }
+.footer-links a { padding: 5px 0; }
+@media (max-width: 1000px) {
+  .site-header { padding-left: 5%; padding-right: 5%; }
+  .site-header nav { gap: 12px; }
+  .hero { gap: 32px; }
+  .section { padding-left: 6%; padding-right: 6%; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 20px; }
+  section[id] { scroll-margin-top: 20px; }
+  .site-header {
+    position: relative;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 5% 8px;
+  }
+  .site-header nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 9px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 3px 1px 10px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+  .site-header nav::-webkit-scrollbar { display: none; }
+  .site-header nav a {
+    flex: 0 0 auto;
+    padding: 7px 9px;
+    scroll-snap-align: start;
+    font-size: 11px;
+  }
+  .site-header nav .nav-cta {
+    margin-left: auto;
+    padding: 7px 12px;
+  }
+  .brand-logo { width: 42px; height: 42px; }
+  .hero { overflow: hidden; }
+  .hero h1 { font-size: clamp(40px, 11vw, 49px); line-height: 1.08; }
+  .hero-photo { width: calc(100% - 12px); margin-left: 6px; }
+  .float-card { max-width: 72%; font-size: 10px; }
+  .engine-visual { overflow: hidden; }
+  .engine-caption { font-size: 10px; line-height: 1.6; }
+  .enquiry-form { width: 100%; }
+  .form-row input, .form-row select, .form-row textarea { font-size: 16px; }
+  .footer-links { gap: 9px 15px; }
+}
+@media (max-width: 380px) {
+  .brand { gap: 7px; }
+  .brand-name { font-size: 10px; letter-spacing: .8px; }
+  .hero h1 { font-size: 39px; }
+  .hero-photo-label { letter-spacing: 1px; }
+  .engine-benefits { grid-template-columns: 1fr; }
+}
+@media (hover: none) {
+  .service-card:hover { transform: none; box-shadow: 0 8px 28px rgba(6,31,53,.045); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
