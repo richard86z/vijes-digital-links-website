@@ -87,7 +87,10 @@ function doPost(e) {
     const details = clean_(p.details, CONFIG.MAX_DETAILS);
     const consent = String(p.marketingConsent || '') === 'yes';
 
-    if (String(p.enquiryConsent || '') !== 'yes') {\n      return responsePage_({ ok: false, error: 'Please confirm that we may use your details to respond to your enquiry.' }, token);\n    }\n    if (!name || !email || !service || !details) {
+    if (String(p.enquiryConsent || '') !== 'yes') {
+      return responsePage_({ ok: false, error: 'Please confirm that we may use your details to respond to your enquiry.' }, token);
+    }
+    if (!name || !email || !service || !details) {
       return responsePage_({ ok: false, error: 'Please complete all required fields.' }, token);
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
