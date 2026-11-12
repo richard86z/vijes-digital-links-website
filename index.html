@@ -138,11 +138,15 @@
         <div class="form-row"><label for="email">Email address *</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="160" placeholder="you@example.com"></div>
         <div class="form-row"><label for="service">What do you need help with? *</label><select id="service" name="service" required><option value="">Select a service</option><option>Digital Marketing</option><option>Social Media Management</option><option>Content & Email Marketing</option><option>Websites & Digital Design</option><option>Automation & Operations</option><option>Research & Business Development</option><option>Translation & Interpretation</option><option>Outsourcing & Project Support</option><option>Business or Institutional Partnership</option><option>Other / Not sure yet</option></select></div>
         <div class="form-row"><label for="details">Tell us a little about your project *</label><textarea id="details" name="details" rows="4" required maxlength="2000" placeholder="Your goals, requirements and preferred timeframe..."></textarea></div>
-        <label class="consent"><input type="checkbox" required> <span>I agree that Vijes Digital Links may use these details to respond to my enquiry. See our <a href="privacy.html">Privacy Notice</a>.</span></label>
-        <button class="button button-submit" type="submit">Send enquiry by email <span>→</span></button>
-        <p class="form-note">Your email app will open with your enquiry addressed to Vijes Digital Links. Review and send the email to contact us. This website does not store or submit your information.</p>
+        <label class="consent"><input type="checkbox" name="enquiryConsent" value="yes" required> <span>I agree that Vijes Digital Links may use these details to respond to my enquiry. See our <a href="privacy.html">Privacy Notice</a>.</span></label>
+        <label class="consent"><input type="checkbox" name="marketingConsent" value="yes"> <span>Yes, I would also like to receive occasional marketing insights, service news and company updates. I can withdraw this permission at any time.</span></label>
+        <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden"><label for="website">Leave this field empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <input type="hidden" name="requestToken" id="request-token">
+        <button class="button button-submit" id="enquiry-submit" type="submit">Send enquiry securely <span>→</span></button>
+        <p class="form-note">Your enquiry is submitted from this website, saved in our private enquiry records and sent to our business inbox. Your details are not added to marketing updates unless you tick the optional box above.</p>
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       </form>
+      <iframe name="enquiry-response" id="enquiry-response" title="Enquiry submission response" hidden></iframe>
     </section>
   </main>
 
@@ -167,25 +171,58 @@
         sessionStorage.removeItem('vijes-service');
       }
     } catch (error) { /* Storage may be unavailable; the enquiry form remains usable. */ }
-    document.getElementById('enquiry-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      var form = event.currentTarget;
-      if (!form.reportValidity()) return;
-      var data = new FormData(form);
-      var message = [
-        'Hello Vijes Digital Links, I would like to make an enquiry.',
-        '',
-        'Name: ' + data.get('name'),
-        'Organisation: ' + (data.get('organisation') || 'Not provided'),
-        'Email: ' + data.get('email'),
-        'Service: ' + data.get('service'),
-        '',
-        'Project details:',
-        data.get('details')
-      ].join('\n');
-      document.getElementById('form-status').textContent = 'Your email app is opening with your enquiry. Please review and send the email.';
-      window.location.href = 'mailto:vijesdigitallinks@gmail.com?subject=' + encodeURIComponent('Vijes Digital Links — Project & Partnership Enquiry') + '&body=' + encodeURIComponent(message);
-    });
+    (function() {
+      var endpoint = 'https://script.google.com/macros/s/AKfycby5jXycqo_iyzTQNsulY6mvK1YibxMKYvyPJ-IBLfIKcksDJHDFi4pGUkDYQGGennbR/exec';
+      var form = document.getElementById('enquiry-form');
+      var iframe = document.getElementById('enquiry-response');
+      var status = document.getElementById('form-status');
+      var button = document.getElementById('enquiry-submit');
+      var tokenField = document.getElementById('request-token');
+      form.action = endpoint;
+      form.method = 'POST';
+      form.target = 'enquiry-response';
+
+      function newToken() {
+        if (window.crypto && window.crypto.randomUUID) return window.crypto.randomUUID();
+        return 'vijes-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+      }
+      tokenField.value = newToken();
+
+      window.addEventListener('message', function(event) {
+        if (event.source !== iframe.contentWindow || !event.data || event.data.type !== 'vijes-enquiry-result') return;
+        if (!tokenField.value || event.data.token !== tokenField.value) return;
+        button.disabled = false;
+        button.removeAttribute('aria-busy');
+
+        if (event.data.ok) {
+          status.textContent = event.data.notificationSent === false
+            ? 'Your enquiry has been saved, but our email notification could not be sent. We will check the records.'
+            : 'Thank you. Your enquiry has been submitted successfully. We will contact you by email.';
+          form.reset();
+          tokenField.value = newToken();
+        } else {
+          status.textContent = event.data.error || 'We could not submit your enquiry. Please try again.';
+        }
+      });
+
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        if (!form.reportValidity() || button.disabled) return;
+        button.disabled = true;
+        button.setAttribute('aria-busy', 'true');
+        status.textContent = 'Submitting your enquiry securely. Please wait…';
+        form.submit();
+
+        window.setTimeout(function() {
+          if (button.disabled) {
+            button.disabled = false;
+            button.removeAttribute('aria-busy');
+            status.textContent = 'We have not received confirmation yet. Please try again or email vijesdigitallinks@gmail.com.';
+            tokenField.value = newToken();
+          }
+        }, 25000);
+      });
+    })();
   </script>
 </body>
 </html>
