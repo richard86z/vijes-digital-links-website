@@ -129,7 +129,7 @@
 
     <section class="contact section" id="contact">
       <div><p class="eyebrow">LET'S BUILD WHAT'S NEXT</p><h2>Have a goal in mind?<br><span>Let's talk.</span></h2><p class="contact-copy">Tell us what you are working on, where you need support and what success looks like. Share a few details below and we'll help you take the conversation forward.</p>
-        <div class="direct-contact"><a href="mailto:vijesdigitallinks@gmail.com">vijesdigitallinks@gmail.com ↗</a><a href="https://wa.me/2347038364520" target="_blank" rel="noopener noreferrer">WhatsApp: +234 703 836 4520 ↗</a></div>
+        <div class="direct-contact"><a href="mailto:vijesdigitallinks@gmail.com">vijesdigitallinks@gmail.com ↗</a></div>
       </div>
       <form class="enquiry-form" id="enquiry-form">
         <p class="contact-label">PROJECT & PARTNERSHIP ENQUIRY</p>
@@ -139,8 +139,8 @@
         <div class="form-row"><label for="service">What do you need help with? *</label><select id="service" name="service" required><option value="">Select a service</option><option>Digital Marketing</option><option>Social Media Management</option><option>Content & Email Marketing</option><option>Websites & Digital Design</option><option>Automation & Operations</option><option>Research & Business Development</option><option>Translation & Interpretation</option><option>Outsourcing & Project Support</option><option>Business or Institutional Partnership</option><option>Other / Not sure yet</option></select></div>
         <div class="form-row"><label for="details">Tell us a little about your project *</label><textarea id="details" name="details" rows="4" required maxlength="2000" placeholder="Your goals, requirements and preferred timeframe..."></textarea></div>
         <label class="consent"><input type="checkbox" required> <span>I agree that Vijes Digital Links may use these details to respond to my enquiry. See our <a href="privacy.html">Privacy Notice</a>.</span></label>
-        <button class="button button-submit" type="submit">Continue to WhatsApp <span>→</span></button>
-        <p class="form-note">Your message is prepared in WhatsApp for you to review and send. This form does not store or submit your information to this website.</p>
+        <button class="button button-submit" type="submit">Send enquiry by email <span>→</span></button>
+        <p class="form-note">Your email app will open with your enquiry addressed to Vijes Digital Links. Review and send the email to contact us. This website does not store or submit your information.</p>
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       </form>
     </section>
@@ -183,8 +183,8 @@
         'Project details:',
         data.get('details')
       ].join('\n');
-      document.getElementById('form-status').textContent = 'WhatsApp is opening with your enquiry. Please review the message and press Send.';
-      window.open('https://wa.me/2347038364520?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
+      document.getElementById('form-status').textContent = 'Your email app is opening with your enquiry. Please review and send the email.';
+      window.location.href = 'mailto:vijesdigitallinks@gmail.com?subject=' + encodeURIComponent('Vijes Digital Links — Project & Partnership Enquiry') + '&body=' + encodeURIComponent(message);
     });
   </script>
 </body>
