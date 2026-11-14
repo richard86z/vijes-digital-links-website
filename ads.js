@@ -18,7 +18,7 @@
   frame.id = 'vijes-sitewide-ad-frame';
   frame.title = 'Sponsored adverts from Vijes Digital Links';
   frame.src = managerOrigin + '/?embed=1';
-  frame.loading = 'lazy';
+  frame.loading = 'eager';
   frame.referrerPolicy = 'strict-origin-when-cross-origin';
   frame.style.width = '100%';
   frame.style.height = '0';
