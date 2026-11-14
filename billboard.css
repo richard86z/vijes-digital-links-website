@@ -17,3 +17,12 @@
 .advertise-form-embed{width:100%;overflow:hidden;border:1px solid #e6eaf0;border-radius:12px;background:#f5f7fa}
 .advertise-form-embed iframe{display:block;width:100%;height:1050px;border:0;overflow:hidden}
 @media(max-width:700px){.advertise-form-embed iframe{height:1450px}}
+
+/* Search-focused billboard FAQ */
+.billboard-faq{padding:78px 9%;background:#fff}
+.billboard-faq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.billboard-faq-grid article{padding:22px;border:1px solid #e8e4dc;border-radius:10px;background:#fbfaf7}
+.billboard-faq-grid h3{font:700 16px Manrope,sans-serif;color:#061f35;margin:0 0 9px}
+.billboard-faq-grid p,.billboard-faq-note{font-size:12px;line-height:1.85;color:#68798d;margin:0}
+.billboard-faq-note{margin-top:22px}
+@media(max-width:700px){.billboard-faq{padding:60px 7%}.billboard-faq-grid{grid-template-columns:1fr}}
