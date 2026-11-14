@@ -113,13 +113,13 @@
     <iframe
       id="vijes-billboard-live-ads"
       title="Approved and paid Vijes Billboard advertisements"
-      src="https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/?embed=1"
+      src="https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/?embed=1&build=1794673160912"
       loading="eager"
       referrerpolicy="strict-origin-when-cross-origin"
-      style="display:block;width:100%;height:0;border:0;overflow:hidden;background:transparent;"
+      style="display:block;width:100%;height:110px;min-height:110px;border:0;overflow:hidden;background:transparent;"
       scrolling="no"
     ></iframe>
-    <div class="billboard-empty" id="vijes-billboard-empty">
+    <div class="billboard-empty" id="vijes-billboard-empty" style="display:none;">
       <div class="empty-symbol">✦</div>
       <p class="empty-kicker">THE FIRST FEATURED SPOT IS OPEN</p>
       <h3>Your advert could be<br>the first one visitors see.</h3>
@@ -202,6 +202,25 @@
    var empty = document.getElementById('vijes-billboard-empty');
    var managerOrigin = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai';
    if (!frame || !empty) return;
+
+   var finalStateReceived = false;
+   var timeoutId = window.setTimeout(function () {
+     if (finalStateReceived) return;
+     frame.style.display = 'none';
+     empty.style.display = '';
+     var kicker = empty.querySelector('.empty-kicker');
+     var heading = empty.querySelector('h3');
+     var message = empty.querySelector('p:not(.empty-kicker)');
+     var link = empty.querySelector('a');
+     if (kicker) kicker.textContent = 'LIVE FEED CONNECTION ISSUE';
+     if (heading) heading.textContent = 'We could not confirm the live adverts.';
+     if (message) message.textContent = 'The advert service did not send a final response. Refresh this page to try again; this does not mean that there are no approved adverts.';
+     if (link) {
+       link.textContent = 'Refresh the Billboard page ↻';
+       link.href = 'billboard.html?refresh=' + Date.now();
+     }
+   }, 12000);
+
    function announceParentReady() {
      if (!frame.contentWindow) return;
      frame.contentWindow.postMessage(
@@ -209,70 +228,58 @@
        managerOrigin
      );
    }
-   window.addEventListener('message', function (event) {
-     if (event.source !== frame.contentWindow || event.origin !== managerOrigin ||
-         !event.data || event.data.type !== 'vijes-ads-resize' ||
-         typeof event.data.height !== 'number') return;
-     var height = Math.max(0, Math.min(1800, Math.ceil(event.data.height)));
-     frame.style.height = height + 'px';
-     frame.style.display = height ? 'block' : 'none';
-     empty.style.display = height > 0 ? 'none' : '';
-   });
-   frame.addEventListener('load', announceParentReady);
-   announceParentReady();
-   [200, 700, 1500].forEach(function (delay) {
-     window.setTimeout(announceParentReady, delay);
-   });
-   frame.addEventListener('error', function () {
-     frame.style.display = 'none';
-     empty.style.display = '';
-   });
- })();
- (function () {
-   var form = document.getElementById('vijes-advertising-request-form');
-   var status = document.getElementById('advert-form-status');
-   var button = document.getElementById('advert-submit');
-   var endpoint = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/api/public/requests';
-   if (!form || !status || !button) return;
 
-   form.addEventListener('submit', async function (event) {
-     event.preventDefault();
-     if (!form.reportValidity()) return;
-     var formData = new FormData(form);
-     var payload = Object.fromEntries(formData.entries());
-     if (payload.website) {
-       status.textContent = 'We could not process this request. Please try again.';
+   window.addEventListener('message', function (event) {
+     if (event.source !== frame.contentWindow ||
+         event.origin !== managerOrigin ||
+         !event.data ||
+         event.data.type !== 'vijes-ads-resize' ||
+         typeof event.data.height !== 'number') return;
+
+     var state = event.data.status || (event.data.height > 0 ? 'ads' : 'empty');
+     var height = Math.max(0, Math.min(1800, Math.ceil(event.data.height)));
+
+     if (state === 'loading') {
+       frame.style.display = 'block';
+       frame.style.height = Math.max(height, 100) + 'px';
+       empty.style.display = 'none';
        return;
      }
-     delete payload.website;
-     delete payload.advertConsent;
-     button.disabled = true;
-     button.setAttribute('aria-busy', 'true');
-     status.textContent = 'Submitting your advertising request securely…';
-     try {
-       var response = await fetch(endpoint, {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify(payload)
-       });
-       var rawResponse = await response.text();
-       var result = {};
-       try { result = rawResponse ? JSON.parse(rawResponse) : {}; } catch (_) {}
-       if (!response.ok || !result.ok) {
-         throw new Error(result.message || result.error || ('The server returned status ' + response.status + '.'));
-       }
-       status.textContent = result.message || 'Your request has been received and saved for review.';
-       status.classList.add('is-success');
-       form.reset();
-     } catch (error) {
-       var reason = error && error.message ? error.message : 'A network or connection error occurred.';
-       status.textContent = 'Submission was not confirmed: ' + reason + ' Your details are still in this form. Before trying again, check the Ads Manager to avoid a duplicate request. You can also use the secure hosted form below or contact vijesdigitallinks@gmail.com.';
-       status.classList.remove('is-success');
-       form.querySelector('.advertise-fallback').open = true;
-     } finally {
-       button.disabled = false;
-       button.removeAttribute('aria-busy');
+
+     if (state === 'empty') {
+       finalStateReceived = true;
+       window.clearTimeout(timeoutId);
+       frame.style.display = 'none';
+       frame.style.height = '0px';
+       empty.style.display = '';
+       return;
      }
+
+     if (state === 'ads' || state === 'error') {
+       finalStateReceived = true;
+       window.clearTimeout(timeoutId);
+       frame.style.display = 'block';
+       frame.style.height = Math.max(height, state === 'error' ? 160 : 120) + 'px';
+       empty.style.display = 'none';
+     }
+   });
+
+   frame.addEventListener('load', announceParentReady);
+   [0, 250, 700, 1500, 2500, 4000].forEach(function (delay) {
+     window.setTimeout(announceParentReady, delay);
+   });
+
+   frame.addEventListener('error', function () {
+     if (finalStateReceived) return;
+     window.clearTimeout(timeoutId);
+     frame.style.display = 'none';
+     empty.style.display = '';
+     var kicker = empty.querySelector('.empty-kicker');
+     var heading = empty.querySelector('h3');
+     var message = empty.querySelector('p:not(.empty-kicker)');
+     if (kicker) kicker.textContent = 'LIVE FEED CONNECTION ISSUE';
+     if (heading) heading.textContent = 'The advert service could not be opened.';
+     if (message) message.textContent = 'Please refresh the page or use the Ads Manager link to check the service.';
    });
  })();
 </script>
