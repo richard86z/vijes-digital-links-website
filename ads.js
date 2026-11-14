@@ -4,7 +4,7 @@
 
   var managerOrigin = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai';
   var page = window.location.pathname.split('/').pop() || 'index.html';
-  if (page === 'advert-admin.html') return;
+  if (page === 'advert-admin.html' || page === 'billboard.html') return;
 
   var header = document.querySelector('.site-header, header');
   var main = document.querySelector('main');
