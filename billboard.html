@@ -209,11 +209,11 @@
      var height = Math.max(0, Math.min(1800, Math.ceil(event.data.height)));
      frame.style.height = height + 'px';
      frame.style.display = height ? 'block' : 'none';
-     empty.hidden = height > 0;
+     empty.style.display = height > 0 ? 'none' : '';
    });
    frame.addEventListener('error', function () {
      frame.style.display = 'none';
-     empty.hidden = false;
+     empty.style.display = '';
    });
  })();
  (function () {
