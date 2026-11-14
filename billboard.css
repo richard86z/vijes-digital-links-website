@@ -31,3 +31,22 @@
 .advertise-fallback summary{cursor:pointer;font-weight:700}
 .advertise-fallback a{color:#9a7130;font-weight:800}
 .advert-form-status.is-success{color:#1c7651;font-weight:700}
+
+
+/* Native live Billboard cards — rendered on the Vijes website, not in an embedded app */
+.billboard-live-feed{width:100%;min-height:30px}
+.billboard-feed-status,.billboard-feed-error{margin:0;padding:24px;border:1px solid #e4e8ed;border-radius:12px;background:#fff;color:#68798d;text-align:center;font-size:13px;line-height:1.7}
+.billboard-feed-error{border-color:#ead8d5;color:#9b4a42}
+.billboard-live-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.billboard-live-card{display:grid;grid-template-columns:minmax(120px,34%) minmax(0,1fr);min-height:230px;overflow:hidden;border:1px solid #e4e0d7;border-radius:14px;background:#fff;box-shadow:0 12px 32px #061f350b}
+.billboard-live-image{width:100%;height:100%;min-height:230px;object-fit:cover;background:#edf1f4}
+.billboard-live-body{display:flex;flex-direction:column;align-items:flex-start;padding:22px;min-width:0}
+.billboard-live-kicker{margin:0 0 8px;color:#a17a3c;font-size:9px;font-weight:800;letter-spacing:1.5px}
+.billboard-live-advertiser{margin:0 0 8px;color:#637589;font-size:11px;font-weight:700}
+.billboard-live-headline{margin:0 0 10px;color:#061f35;font:800 clamp(19px,2.2vw,25px)/1.2 Manrope,sans-serif;letter-spacing:-.5px}
+.billboard-live-description{margin:0 0 15px;color:#637589;font-size:13px;line-height:1.75;white-space:pre-line}
+.billboard-live-details{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 18px}
+.billboard-live-details span{display:inline-flex;padding:6px 9px;border-radius:5px;background:#f3f1eb;color:#526477;font-size:10px;font-weight:700}
+.billboard-live-action{display:inline-flex;align-items:center;gap:6px;margin-top:auto;padding:11px 15px;border-radius:6px;background:#061f35;color:#fff!important;font-size:11px;font-weight:800;text-decoration:none!important}
+.billboard-live-action:hover{background:#174362}
+@media(max-width:700px){.billboard-live-grid{grid-template-columns:1fr}.billboard-live-card{grid-template-columns:1fr}.billboard-live-image{height:210px;min-height:210px}.billboard-live-body{padding:19px}.billboard-live-headline{font-size:22px}}
