@@ -229,15 +229,18 @@
          headers: { 'Content-Type': 'application/json' },
          body: JSON.stringify(payload)
        });
-       var result = await response.json();
+       var rawResponse = await response.text();
+       var result = {};
+       try { result = rawResponse ? JSON.parse(rawResponse) : {}; } catch (_) {}
        if (!response.ok || !result.ok) {
-         throw new Error(result.message || 'Your request could not be submitted. Please try again.');
+         throw new Error(result.message || result.error || ('The server returned status ' + response.status + '.'));
        }
        status.textContent = result.message || 'Your request has been received and saved for review.';
        status.classList.add('is-success');
        form.reset();
      } catch (error) {
-       status.textContent = 'We could not confirm your submission from this form. Please use the secure hosted form below or contact vijesdigitallinks@gmail.com.';
+       var reason = error && error.message ? error.message : 'A network or connection error occurred.';
+       status.textContent = 'Submission was not confirmed: ' + reason + ' Your details are still in this form. Before trying again, check the Ads Manager to avoid a duplicate request. You can also use the secure hosted form below or contact vijesdigitallinks@gmail.com.';
        status.classList.remove('is-success');
        form.querySelector('.advertise-fallback').open = true;
      } finally {
