@@ -35,11 +35,24 @@
   }
 
   window.addEventListener('message', function (event) {
-    if (event.origin !== managerOrigin || !event.data ||
+    if (event.source !== frame.contentWindow || event.origin !== managerOrigin || !event.data ||
         event.data.type !== 'vijes-ads-resize' ||
         typeof event.data.height !== 'number') return;
     var height = Math.max(0, Math.min(900, Math.ceil(event.data.height)));
     frame.style.height = height + 'px';
     section.style.display = height ? 'block' : 'none';
   });
+  var requestFrame = document.getElementById('vijes-advert-request-frame');
+  if (requestFrame) {
+    window.addEventListener('message', function (event) {
+      if (event.source !== requestFrame.contentWindow ||
+          event.origin !== managerOrigin ||
+          !event.data ||
+          event.data.type !== 'vijes-ads-resize' ||
+          typeof event.data.height !== 'number') return;
+      var requestHeight = Math.max(900, Math.min(2600, Math.ceil(event.data.height)));
+      requestFrame.style.height = requestHeight + 'px';
+    });
+  }
+
 })();
