@@ -110,7 +110,16 @@
 
   <section class="billboard-listings" aria-labelledby="live-ads-title">
     <div class="billboard-section-heading"><div><p class="eyebrow">DISCOVER PROMOTIONS</p><h2 id="live-ads-title">Featured on the billboard</h2></div><span class="review-pill"><i></i> APPROVED ADVERTS ONLY</span></div>
-    <div class="billboard-empty">
+    <iframe
+      id="vijes-billboard-live-ads"
+      title="Approved and paid Vijes Billboard advertisements"
+      src="https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/?embed=1"
+      loading="eager"
+      referrerpolicy="strict-origin-when-cross-origin"
+      style="display:block;width:100%;height:0;border:0;overflow:hidden;background:transparent;"
+      scrolling="no"
+    ></iframe>
+    <div class="billboard-empty" id="vijes-billboard-empty">
       <div class="empty-symbol">✦</div>
       <p class="empty-kicker">THE FIRST FEATURED SPOT IS OPEN</p>
       <h3>Your advert could be<br>the first one visitors see.</h3>
@@ -188,6 +197,25 @@
 </footer>
 <script>
  document.getElementById('year').textContent = new Date().getFullYear();
+ (function () {
+   var frame = document.getElementById('vijes-billboard-live-ads');
+   var empty = document.getElementById('vijes-billboard-empty');
+   var managerOrigin = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai';
+   if (!frame || !empty) return;
+   window.addEventListener('message', function (event) {
+     if (event.source !== frame.contentWindow || event.origin !== managerOrigin ||
+         !event.data || event.data.type !== 'vijes-ads-resize' ||
+         typeof event.data.height !== 'number') return;
+     var height = Math.max(0, Math.min(1800, Math.ceil(event.data.height)));
+     frame.style.height = height + 'px';
+     frame.style.display = height ? 'block' : 'none';
+     empty.hidden = height > 0;
+   });
+   frame.addEventListener('error', function () {
+     frame.style.display = 'none';
+     empty.hidden = false;
+   });
+ })();
  (function () {
    var form = document.getElementById('vijes-advertising-request-form');
    var status = document.getElementById('advert-form-status');
