@@ -4,10 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="description" content="Owner workflow for managing approved Vijes Digital Links billboard adverts.">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="ads.css">
+  <meta name="description" content="Secure owner-only advertising campaign management for Vijes Digital Links.">
   <title>Advert Management | Vijes Digital Links</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
@@ -15,41 +14,13 @@
     <nav aria-label="Admin navigation"><a href="billboard.html">Public Billboard</a><a class="nav-cta" href="index.html">Website</a></nav>
   </header>
   <main class="legal-page">
-    <p class="eyebrow">OWNER WORKFLOW · ADVERTISING</p>
-    <h1>Advert management</h1>
-    <p>This page is a shortcut to the central advert inventory. Publishing rights are controlled by GitHub repository access. Only an account with write permission to the Vijes website repository can change the live advert inventory.</p>
-    <h2>Before publishing an advert</h2>
-    <ol>
-      <li>Review the advertiser and the submitted creative.</li>
-      <li>Send a written quotation and agree the placement and campaign dates.</li>
-      <li>Verify payment in the payment provider account. Do not rely on screenshots or receipts supplied by the advertiser.</li>
-      <li>Only then add the approved advert to the inventory and set its status to <strong>published</strong>.</li>
-      <li>Set accurate start and end dates. The website automatically hides adverts outside their campaign dates.</li>
-      <li>When a campaign ends or is paused, change its status to <strong>paused</strong> or remove it.</li>
-    </ol>
-    <h2>Manage the live inventory</h2>
-    <p>Use the secure GitHub editor. GitHub will require you to sign in and will only allow authorised repository collaborators to save changes.</p>
-    <p><a class="button button-primary" href="https://github.com/richard86z/vijes-digital-links-website/edit/main/ads.json" target="_blank" rel="noopener noreferrer">Open advert inventory in GitHub ↗</a></p>
-    <h2>Advert record format</h2>
-    <p>The inventory starts empty. Add an item inside the <code>ads</code> array using this structure, replacing the example values with the advertiser's approved information:</p>
-    <pre style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f3f5f8;padding:18px;border-radius:10px;font-size:12px">{
-  "id": "unique-campaign-id",
-  "advertiser": "Approved business name",
-  "headline": "Advert headline",
-  "description": "Short accurate advert description",
-  "imageUrl": "https://example.com/advert-image.jpg",
-  "imageAlt": "Description of the advert image",
-  "destinationUrl": "https://example.com",
-  "callToAction": "Visit website",
-  "placement": "featured",
-  "startDate": "2026-11-20",
-  "endDate": "2026-12-20",
-  "status": "published",
-  "approved": true
-}</pre>
-    <p><strong>Important:</strong> never publish an advert before payment has been independently verified and the content approved. Do not add customer contact details, payment records or private documents to this public file. The advert inventory is public website content.</p>
+    <p class="eyebrow">OWNER-ONLY ADVERTISING</p>
+    <h1>Advertising campaign manager</h1>
+    <p>Manage advertiser requests, quotations, payment verification, campaign dates, approvals and advert performance in the secure Vijes Ads Manager.</p>
+    <p><a class="button button-primary" href="https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/">Open secure Ads Manager ↗</a></p>
+    <p>Sign in using the authorised owner account <strong>vijesdigitallinks@gmail.com</strong>. Advertisers and ordinary website visitors cannot access campaign records or publishing controls.</p>
     <p><a href="billboard.html">← Return to the public advertising billboard</a></p>
   </main>
-  <footer><small>© 2026 Vijes Digital Links. Owner advert-management instructions.</small></footer>
+  <footer><small>© 2026 Vijes Digital Links. Owner advertising management.</small></footer>
 </body>
 </html>
