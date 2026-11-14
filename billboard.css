@@ -26,3 +26,8 @@
 .billboard-faq-grid p,.billboard-faq-note{font-size:12px;line-height:1.85;color:#68798d;margin:0}
 .billboard-faq-note{margin-top:22px}
 @media(max-width:700px){.billboard-faq{padding:60px 7%}.billboard-faq-grid{grid-template-columns:1fr}}
+
+.advertise-fallback{margin-top:16px;padding-top:12px;border-top:1px solid #e8e4dc;color:#657589;font-size:11px}
+.advertise-fallback summary{cursor:pointer;font-weight:700}
+.advertise-fallback a{color:#9a7130;font-weight:800}
+.advert-form-status.is-success{color:#1c7651;font-weight:700}
