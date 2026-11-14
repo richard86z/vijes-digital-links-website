@@ -147,9 +147,33 @@
       <div class="advertise-contact"><b>Advertising enquiries</b><a href="mailto:vijesdigitallinks@gmail.com">vijesdigitallinks@gmail.com</a><a href="https://wa.me/2347038364520?text=Hello%20Vijes%20Digital%20Links%2C%20I%20would%20like%20to%20advertise%20on%20your%20Billboard.">WhatsApp advertising desk ↗</a></div>
       <p class="advertise-safety">Please provide only creative materials you own or are authorised to use. Do not include passwords, payment-card details or confidential customer information.</p>
     </div>
-    <div class="advertise-form-embed">
-      <iframe id="vijes-advert-request-frame" title="Submit a paid advertising request to Vijes Digital Links" src="https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/?request=1" loading="lazy" scrolling="no"></iframe>
-    </div>
+    <form class="advertise-form" id="vijes-advertising-request-form">
+      <p class="contact-label">PAID ADVERTISING REQUEST</p>
+      <div class="advert-form-grid">
+        <div class="advert-field"><label for="advert-contact">Contact name *</label><input id="advert-contact" name="contactName" required maxlength="120" autocomplete="name"></div>
+        <div class="advert-field"><label for="advert-business">Business / brand *</label><input id="advert-business" name="advertiser" required maxlength="120" autocomplete="organization"></div>
+        <div class="advert-field"><label for="advert-email">Business email *</label><input id="advert-email" name="email" type="email" required maxlength="180" autocomplete="email"></div>
+        <div class="advert-field"><label for="advert-country">Country *</label><input id="advert-country" name="country" required maxlength="100" autocomplete="country-name"></div>
+        <div class="advert-field"><label for="advert-market">Target market</label><input id="advert-market" name="targetMarket" maxlength="150" placeholder="Countries or audience"></div>
+        <div class="advert-field"><label for="advert-category">Category</label><select id="advert-category" name="category"><option>Products & retail</option><option>Professional services</option><option>Technology & software</option><option>Education & training</option><option>Finance & business</option><option>Health & wellness</option><option>Travel & hospitality</option><option>Food & lifestyle</option><option>Other</option></select></div>
+        <div class="advert-field"><label for="advert-placement">Preferred placement</label><select id="advert-placement" name="placement"><option>Featured spotlight</option><option>Standard listing</option><option>Category spotlight</option><option>Recommend the best option</option></select></div>
+        <div class="advert-field"><label for="advert-duration">Preferred duration *</label><input id="advert-duration" name="campaignDuration" required maxlength="100" placeholder="e.g. 10 days or 6 weeks"></div>
+        <div class="advert-field"><label for="advert-start">Preferred start date</label><input id="advert-start" name="startDate" type="date"></div>
+        <div class="advert-field"><label for="advert-end">Preferred end date</label><input id="advert-end" name="endDate" type="date"></div>
+        <div class="advert-field advert-field-wide"><label for="advert-url">Website / destination link</label><input id="advert-url" name="destinationUrl" type="url" maxlength="500" placeholder="https://example.com"></div>
+        <div class="advert-field advert-field-wide"><label for="advert-image">Advert image link</label><input id="advert-image" name="imageUrl" type="url" maxlength="500" placeholder="Public image URL (optional)"></div>
+        <div class="advert-field advert-field-wide"><label for="advert-headline">Advert headline *</label><input id="advert-headline" name="headline" required maxlength="120"></div>
+        <div class="advert-field advert-field-wide"><label for="advert-description">Advert description *</label><textarea id="advert-description" name="description" required maxlength="900" rows="3"></textarea></div>
+        <div class="advert-field advert-field-wide"><label for="advert-requirements">Additional requirements</label><textarea id="advert-requirements" name="requirements" maxlength="1200" rows="3"></textarea></div>
+      </div>
+      <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden">
+        <label for="advert-website">Leave this field empty</label><input id="advert-website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <label class="advert-consent"><input type="checkbox" name="advertConsent" value="yes" required><span>I confirm that the information is accurate and that I own or have permission to use the advert materials. I understand this is a request, not a confirmed booking.</span></label>
+      <button class="button button-submit" id="advert-submit" type="submit">Submit advertising request <span>→</span></button>
+      <p class="advert-form-status" id="advert-form-status" role="status" aria-live="polite">Your request is saved for review. No payment is taken here and no advert is published automatically.</p>
+      <details class="advertise-fallback"><summary>Having trouble submitting?</summary><p>You can open the hosted request form instead.</p><a href="https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/?request=1" target="_blank" rel="noopener noreferrer">Open secure advertising form ↗</a></details>
+    </form>
   </section>
 
   <section class="billboard-faq" aria-labelledby="billboard-faq-title">
@@ -179,13 +203,47 @@
 <script>
  document.getElementById('year').textContent = new Date().getFullYear();
  (function () {
-   var frame = document.getElementById('vijes-advert-request-frame');
-   if (!frame) return;
-   window.addEventListener('message', function (event) {
-     if (event.origin !== 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai' ||
-         !event.data || event.data.type !== 'vijes-ads-resize' ||
-         typeof event.data.height !== 'number') return;
-     frame.style.height = Math.max(700, Math.min(1800, Math.ceil(event.data.height))) + 'px';
+   var form = document.getElementById('vijes-advertising-request-form');
+   var status = document.getElementById('advert-form-status');
+   var button = document.getElementById('advert-submit');
+   var endpoint = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/api/public/requests';
+   if (!form || !status || !button) return;
+
+   form.addEventListener('submit', async function (event) {
+     event.preventDefault();
+     if (!form.reportValidity()) return;
+     var formData = new FormData(form);
+     var payload = Object.fromEntries(formData.entries());
+     if (payload.website) {
+       status.textContent = 'We could not process this request. Please try again.';
+       return;
+     }
+     delete payload.website;
+     delete payload.advertConsent;
+     button.disabled = true;
+     button.setAttribute('aria-busy', 'true');
+     status.textContent = 'Submitting your advertising request securely…';
+     try {
+       var response = await fetch(endpoint, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify(payload)
+       });
+       var result = await response.json();
+       if (!response.ok || !result.ok) {
+         throw new Error(result.message || 'Your request could not be submitted. Please try again.');
+       }
+       status.textContent = result.message || 'Your request has been received and saved for review.';
+       status.classList.add('is-success');
+       form.reset();
+     } catch (error) {
+       status.textContent = 'We could not confirm your submission from this form. Please use the secure hosted form below or contact vijesdigitallinks@gmail.com.';
+       status.classList.remove('is-success');
+       form.querySelector('.advertise-fallback').open = true;
+     } finally {
+       button.disabled = false;
+       button.removeAttribute('aria-busy');
+     }
    });
  })();
 </script>
