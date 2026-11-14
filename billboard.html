@@ -110,21 +110,15 @@
 
   <section class="billboard-listings" aria-labelledby="live-ads-title">
     <div class="billboard-section-heading"><div><p class="eyebrow">DISCOVER PROMOTIONS</p><h2 id="live-ads-title">Featured on the billboard</h2></div><span class="review-pill"><i></i> APPROVED ADVERTS ONLY</span></div>
-    <iframe
-      id="vijes-billboard-live-ads"
-      title="Approved and paid Vijes Billboard advertisements"
-      src="https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai/?embed=1&build=1794673160912"
-      loading="eager"
-      referrerpolicy="strict-origin-when-cross-origin"
-      style="display:block;width:100%;height:110px;min-height:110px;border:0;overflow:hidden;background:transparent;"
-      scrolling="no"
-    ></iframe>
+    <div id="vijes-billboard-feed" class="billboard-live-feed" aria-live="polite" aria-busy="true">
+      <p class="billboard-feed-status">Loading approved advertiser campaigns…</p>
+    </div>
     <div class="billboard-empty" id="vijes-billboard-empty" style="display:none;">
       <div class="empty-symbol">✦</div>
-      <p class="empty-kicker">THE FIRST FEATURED SPOT IS OPEN</p>
-      <h3>Your advert could be<br>the first one visitors see.</h3>
-      <p>There are no paid advertiser listings published yet. Request a placement and, once your advert is approved and payment is confirmed, it can be considered for display here.</p>
-      <a href="#advertise">Be among our first advertisers →</a>
+      <p class="empty-kicker">APPROVED ADVERTISING</p>
+      <h3>No active campaigns are showing right now.</h3>
+      <p>Approved and payment-verified adverts will appear here during their confirmed campaign dates.</p>
+      <a href="#advertise">Request an advertising placement →</a>
     </div>
   </section>
 
@@ -198,88 +192,148 @@
 <script>
  document.getElementById('year').textContent = new Date().getFullYear();
  (function () {
-   var frame = document.getElementById('vijes-billboard-live-ads');
+   var feed = document.getElementById('vijes-billboard-feed');
    var empty = document.getElementById('vijes-billboard-empty');
-   var managerOrigin = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai';
-   if (!frame || !empty) return;
+   var apiBase = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai';
+   if (!feed || !empty) return;
 
-   var finalStateReceived = false;
-   var timeoutId = window.setTimeout(function () {
-     if (finalStateReceived) return;
-     frame.style.display = 'none';
-     empty.style.display = '';
-     var kicker = empty.querySelector('.empty-kicker');
-     var heading = empty.querySelector('h3');
-     var message = empty.querySelector('p:not(.empty-kicker)');
-     var link = empty.querySelector('a');
-     if (kicker) kicker.textContent = 'LIVE FEED CONNECTION ISSUE';
-     if (heading) heading.textContent = 'We could not confirm the live adverts.';
-     if (message) message.textContent = 'The advert service did not send a final response. Refresh this page to try again; this does not mean that there are no approved adverts.';
-     if (link) {
-       link.textContent = 'Refresh the Billboard page ↻';
-       link.href = 'billboard.html?refresh=' + Date.now();
-     }
-   }, 12000);
-
-   function announceParentReady() {
-     if (!frame.contentWindow) return;
-     frame.contentWindow.postMessage(
-       { type: 'vijes-ads-parent-ready' },
-       managerOrigin
-     );
+   function text(tag, value, className) {
+     var node = document.createElement(tag);
+     if (className) node.className = className;
+     node.textContent = value || '';
+     return node;
    }
 
-   window.addEventListener('message', function (event) {
-     if (event.source !== frame.contentWindow ||
-         event.origin !== managerOrigin ||
-         !event.data ||
-         event.data.type !== 'vijes-ads-resize' ||
-         typeof event.data.height !== 'number') return;
+   function safeExternalUrl(value) {
+     try {
+       var url = new URL(value);
+       var host = url.hostname.toLowerCase();
+       var isPlatform = host === 'appdeploy.ai' || host.endsWith('.appdeploy.ai') ||
+         host === 'appdeploy.com' || host.endsWith('.appdeploy.com');
+       return !isPlatform && (url.protocol === 'https:' || url.protocol === 'http:')
+         ? url.href
+         : '';
+     } catch (_) {
+       return '';
+     }
+   }
 
-     var state = event.data.status || (event.data.height > 0 ? 'ads' : 'empty');
-     var height = Math.max(0, Math.min(1800, Math.ceil(event.data.height)));
+   function dateLabel(value) {
+     if (!value) return '';
+     var date = new Date(value + 'T00:00:00');
+     return Number.isNaN(date.getTime())
+       ? value
+       : new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
+   }
 
-     if (state === 'loading') {
-       frame.style.display = 'block';
-       frame.style.height = Math.max(height, 100) + 'px';
-       empty.style.display = 'none';
-       return;
+   function track(campaignId, eventName) {
+     fetch(apiBase + '/api/billboard/metrics', {
+       method: 'POST',
+       mode: 'cors',
+       credentials: 'omit',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ campaignId: campaignId, event: eventName }),
+       keepalive: true
+     }).catch(function () {});
+   }
+
+   function renderCampaign(ad) {
+     var article = document.createElement('article');
+     article.className = 'billboard-live-card';
+
+     if (ad.imageUrl) {
+       var imageUrl = safeExternalUrl(ad.imageUrl);
+       if (imageUrl) {
+         var image = document.createElement('img');
+         image.className = 'billboard-live-image';
+         image.src = imageUrl;
+         image.alt = (ad.advertiser || 'Advertiser') + ' campaign image';
+         image.loading = 'lazy';
+         image.referrerPolicy = 'no-referrer';
+         article.appendChild(image);
+       }
      }
 
-     if (state === 'empty') {
-       finalStateReceived = true;
-       window.clearTimeout(timeoutId);
-       frame.style.display = 'none';
-       frame.style.height = '0px';
+     var body = document.createElement('div');
+     body.className = 'billboard-live-body';
+     body.appendChild(text('p', 'SPONSORED ADVERTISING', 'billboard-live-kicker'));
+     body.appendChild(text('p', ad.advertiser, 'billboard-live-advertiser'));
+     body.appendChild(text('h3', ad.headline, 'billboard-live-headline'));
+     body.appendChild(text('p', ad.description, 'billboard-live-description'));
+
+     var details = document.createElement('div');
+     details.className = 'billboard-live-details';
+     [
+       ad.category,
+       ad.targetMarket || ad.country,
+       ad.placement,
+       ad.campaignDuration,
+       ad.startDate && ad.endDate
+         ? dateLabel(ad.startDate) + ' – ' + dateLabel(ad.endDate)
+         : ad.startDate
+           ? 'Starts ' + dateLabel(ad.startDate)
+           : ad.endDate
+             ? 'Ends ' + dateLabel(ad.endDate)
+             : ''
+     ].filter(Boolean).forEach(function (value) {
+       details.appendChild(text('span', value));
+     });
+     if (details.childElementCount) body.appendChild(details);
+
+     var destination = safeExternalUrl(ad.destinationUrl);
+     var action = document.createElement('a');
+     action.className = 'billboard-live-action';
+     action.href = destination || 'https://wa.me/2347038364520?text=' +
+       encodeURIComponent('Hello Vijes Digital Links, I would like to enquire about ' +
+         (ad.advertiser || 'this advertiser') + ': ' + (ad.headline || 'this advert'));
+     action.target = '_blank';
+     action.rel = 'sponsored noopener noreferrer';
+     action.textContent = destination ? 'Visit advertiser website ↗' : 'Enquire about this advert ↗';
+     action.addEventListener('click', function () {
+       track(ad.id, 'click');
+     });
+     body.appendChild(action);
+     article.appendChild(body);
+     track(ad.id, 'impression');
+     return article;
+   }
+
+   function showError(message) {
+     feed.setAttribute('aria-busy', 'false');
+     feed.replaceChildren(text('p', message, 'billboard-feed-error'));
+     empty.style.display = 'none';
+   }
+
+   fetch(apiBase + '/api/billboard/ads', {
+     method: 'GET',
+     mode: 'cors',
+     credentials: 'omit',
+     cache: 'no-store',
+     headers: { 'Accept': 'application/json' }
+   })
+   .then(function (response) {
+     if (!response.ok) throw new Error('The advertising service returned an error (' + response.status + ').');
+     return response.json();
+   })
+   .then(function (payload) {
+     feed.setAttribute('aria-busy', 'false');
+     var ads = Array.isArray(payload.ads) ? payload.ads : [];
+     if (!ads.length) {
+       feed.replaceChildren();
        empty.style.display = '';
        return;
      }
-
-     if (state === 'ads' || state === 'error') {
-       finalStateReceived = true;
-       window.clearTimeout(timeoutId);
-       frame.style.display = 'block';
-       frame.style.height = Math.max(height, state === 'error' ? 160 : 120) + 'px';
-       empty.style.display = 'none';
-     }
-   });
-
-   frame.addEventListener('load', announceParentReady);
-   [0, 250, 700, 1500, 2500, 4000].forEach(function (delay) {
-     window.setTimeout(announceParentReady, delay);
-   });
-
-   frame.addEventListener('error', function () {
-     if (finalStateReceived) return;
-     window.clearTimeout(timeoutId);
-     frame.style.display = 'none';
-     empty.style.display = '';
-     var kicker = empty.querySelector('.empty-kicker');
-     var heading = empty.querySelector('h3');
-     var message = empty.querySelector('p:not(.empty-kicker)');
-     if (kicker) kicker.textContent = 'LIVE FEED CONNECTION ISSUE';
-     if (heading) heading.textContent = 'The advert service could not be opened.';
-     if (message) message.textContent = 'Please refresh the page or use the Ads Manager link to check the service.';
+     empty.style.display = 'none';
+     var grid = document.createElement('div');
+     grid.className = 'billboard-live-grid';
+     ads.forEach(function (ad) {
+       grid.appendChild(renderCampaign(ad));
+     });
+     feed.replaceChildren(grid);
+   })
+   .catch(function (error) {
+     console.error('Vijes Billboard feed error:', error);
+     showError('We could not load the live adverts just now. Please refresh this page to try again.');
    });
  })();
 </script>
