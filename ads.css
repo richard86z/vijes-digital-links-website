@@ -1,0 +1,11 @@
+/* Shared, site-wide paid advertising placements */
+.sitewide-ads{width:min(1180px,90%);margin:18px auto 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.sitewide-ad{display:grid;grid-template-columns:112px 1fr;min-height:132px;overflow:hidden;border:1px solid #e7eaf0;border-radius:12px;background:#fff;box-shadow:0 8px 24px rgba(6,31,53,.06)}
+.sitewide-ad-image{width:112px;height:100%;min-height:132px;object-fit:cover;background:#eef1f5}
+.sitewide-ad-copy{padding:14px 16px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0}
+.sitewide-ad-kicker{margin:0 0 5px;color:#98712f;font-size:9px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
+.sitewide-ad h2{margin:0;color:#08263d;font:800 16px/1.25 Manrope,Arial,sans-serif;letter-spacing:-.3px}
+.sitewide-ad p{margin:6px 0 9px;color:#596579;font-size:11px;line-height:1.55}
+.sitewide-ad-link{color:#0c4770;font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.sitewide-ad-link:hover{color:#98712f}
+@media(max-width:560px){.sitewide-ads{width:92%;margin:12px auto 20px;grid-template-columns:1fr}.sitewide-ad{grid-template-columns:94px 1fr;min-height:118px}.sitewide-ad-image{width:94px;min-height:118px}.sitewide-ad-copy{padding:11px 12px}.sitewide-ad h2{font-size:14px}}
