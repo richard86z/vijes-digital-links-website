@@ -105,35 +105,17 @@
   <small>© <span id="year">2026</span> Vijes Digital Links. All rights reserved.</small>
 </footer>
 <script>
-document.getElementById('year').textContent = new Date().getFullYear();
-(function () {
-  var form = document.getElementById('advertise-form');
-  var status = document.getElementById('advert-form-status');
-  if (!form || !status) return;
-  form.addEventListener('submit', function (event) {
-    event.preventDefault();
-    if (!form.reportValidity()) return;
-    var fields = new FormData(form);
-    var labels = {
-      name: 'Contact name', business: 'Business / brand', email: 'Email',
-      country: 'Country / target market', category: 'Category',
-      placement: 'Preferred placement', start: 'Preferred start date',
-      end: 'Preferred end date', duration: 'Campaign duration',
-      link: 'Website / destination link', creative: 'Creative link',
-      message: 'Advert description', notes: 'Additional requirements'
-    };
-    var lines = ['Hello Vijes Digital Links,', '', 'I would like to request a paid advertising placement on the Vijes Digital Links Billboard.', ''];
-    Object.keys(labels).forEach(function (key) {
-      var value = String(fields.get(key) || '').trim();
-      if (value) lines.push(labels[key] + ': ' + value);
-    });
-    lines.push('', 'Please review my request and send the available options, custom quotation, specifications and payment instructions.', '', 'I understand that the advert is not booked or published until the terms are agreed, payment is verified and the advert is approved.');
-    var subject = 'Paid Billboard Advertising Request - ' + String(fields.get('business') || 'New advertiser').trim();
-    var mailto = 'mailto:vijesdigitallinks@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(lines.join('\n'));
-    status.textContent = 'Your email application should open with your advertising request. Review the details and press Send to deliver it to Vijes Digital Links.';
-    window.location.href = mailto;
-  });
-})();
+ document.getElementById('year').textContent = new Date().getFullYear();
+ (function () {
+   var frame = document.getElementById('vijes-advert-request-frame');
+   if (!frame) return;
+   window.addEventListener('message', function (event) {
+     if (event.origin !== 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai' ||
+         !event.data || event.data.type !== 'vijes-ads-resize' ||
+         typeof event.data.height !== 'number') return;
+     frame.style.height = Math.max(700, Math.min(1800, Math.ceil(event.data.height))) + 'px';
+   });
+ })();
 </script>
 <script src="ads.js" defer></script>
 </body>
