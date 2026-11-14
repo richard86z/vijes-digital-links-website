@@ -202,6 +202,13 @@
    var empty = document.getElementById('vijes-billboard-empty');
    var managerOrigin = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai';
    if (!frame || !empty) return;
+   function announceParentReady() {
+     if (!frame.contentWindow) return;
+     frame.contentWindow.postMessage(
+       { type: 'vijes-ads-parent-ready' },
+       managerOrigin
+     );
+   }
    window.addEventListener('message', function (event) {
      if (event.source !== frame.contentWindow || event.origin !== managerOrigin ||
          !event.data || event.data.type !== 'vijes-ads-resize' ||
@@ -210,6 +217,11 @@
      frame.style.height = height + 'px';
      frame.style.display = height ? 'block' : 'none';
      empty.style.display = height > 0 ? 'none' : '';
+   });
+   frame.addEventListener('load', announceParentReady);
+   announceParentReady();
+   [200, 700, 1500].forEach(function (delay) {
+     window.setTimeout(announceParentReady, delay);
    });
    frame.addEventListener('error', function () {
      frame.style.display = 'none';
