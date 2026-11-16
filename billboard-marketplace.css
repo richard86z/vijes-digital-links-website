@@ -1,0 +1,17 @@
+/* Vijes Billboard 2.0 — global marketplace presentation */
+.billboard-marketplace-directory{padding:78px 9%;background:#fff}
+.billboard-marketplace-heading{display:flex;justify-content:space-between;align-items:end;gap:28px;margin-bottom:28px}
+.billboard-marketplace-heading .eyebrow{color:#a17a3c;font-size:10px;font-weight:800;letter-spacing:1.5px}
+.billboard-marketplace-heading h2{margin:8px 0 0;color:#061f35;font:800 clamp(30px,3.5vw,43px)/1.1 Manrope,sans-serif;letter-spacing:-1.2px}
+.billboard-marketplace-heading p{max-width:430px;margin:0;color:#68798d;font-size:13px;line-height:1.8}
+.billboard-marketplace-regions{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 25px;padding:17px 18px;border:1px solid #e8e4dc;border-radius:10px;background:#faf9f6}
+.billboard-marketplace-regions strong{width:100%;color:#061f35;font-size:10px;letter-spacing:1px}
+.billboard-marketplace-regions span{padding:7px 11px;border-radius:30px;background:#fff;border:1px solid #e6e1d7;color:#53677c;font-size:10px;font-weight:700}
+.billboard-marketplace-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.billboard-marketplace-category{position:relative;display:flex;align-items:center;gap:14px;min-height:82px;padding:16px;border:1px solid #e8e4dc;border-radius:10px;background:#fff}
+.billboard-marketplace-category-icon{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:9px;background:#f1ecdf;color:#987132;font-size:19px}
+.billboard-marketplace-category strong{display:block;color:#102b43;font:700 13px Manrope,sans-serif}
+.billboard-marketplace-category small{display:block;margin-top:4px;color:#8390a0;font-size:10px;line-height:1.5}
+.billboard-marketplace-note{margin:22px 0 0;color:#758395;font-size:11px;line-height:1.8}
+@media(max-width:900px){.billboard-marketplace-directory{padding-left:6%;padding-right:6%}.billboard-marketplace-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.billboard-marketplace-heading{align-items:flex-start;flex-direction:column}}
+@media(max-width:600px){.billboard-marketplace-directory{padding:58px 7%}.billboard-marketplace-grid{grid-template-columns:1fr}.billboard-marketplace-category{min-height:72px}}
