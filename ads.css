@@ -9,3 +9,33 @@
 .sitewide-ad-link{color:#0c4770;font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
 .sitewide-ad-link:hover{color:#98712f}
 @media(max-width:560px){.sitewide-ads{width:92%;margin:12px auto 20px;grid-template-columns:1fr}.sitewide-ad{grid-template-columns:94px 1fr;min-height:118px}.sitewide-ad-image{width:94px;min-height:118px}.sitewide-ad-copy{padding:11px 12px}.sitewide-ad h2{font-size:14px}}
+
+
+/* Vijes Digital Links Stage 1 customer-support chat */
+#vijes-assistant{position:fixed;right:18px;bottom:18px;z-index:9998;font-family:'DM Sans',Arial,sans-serif}
+.vijes-chat-launcher{display:flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:13px 19px;background:#101b35;color:#fff;font-size:13px;font-weight:700;box-shadow:0 8px 28px rgba(16,27,53,.24);cursor:pointer}
+.vijes-chat-launcher-icon{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#c9f36b;color:#101b35;font-size:17px}
+.vijes-chat-panel{position:absolute;right:0;bottom:62px;width:min(370px,calc(100vw - 28px));height:min(550px,calc(100dvh - 105px));min-height:390px;display:flex;flex-direction:column;overflow:hidden;border:1px solid #e3e8f1;border-radius:17px;background:#fff;box-shadow:0 18px 55px rgba(16,27,53,.22)}
+.vijes-chat-panel[hidden]{display:none}
+.vijes-chat-header{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 18px 15px;background:#101b35;color:#fff}
+.vijes-chat-header div{display:flex;flex-direction:column;gap:3px}
+.vijes-chat-kicker{color:#c9f36b;font-size:9px;font-weight:800;letter-spacing:1.5px}
+.vijes-chat-header strong{font-size:18px;line-height:1.3}
+.vijes-chat-header small{color:#c6cede;font-size:11px}
+.vijes-chat-close{border:0;background:transparent;color:#fff;font-size:27px;line-height:1;cursor:pointer}
+.vijes-chat-messages{flex:1;overflow:auto;padding:16px;background:#f7f8fc}
+.vijes-chat-message{max-width:92%;margin:0 0 11px;padding:11px 13px;border-radius:13px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.vijes-bot-message{background:#fff;color:#26334d;border:1px solid #e8ebf2;border-bottom-left-radius:4px}
+.vijes-user-message{margin-left:auto;background:#e8edff;color:#1b2b59;border-bottom-right-radius:4px}
+.vijes-chat-quick{display:flex;flex-wrap:wrap;gap:7px;padding:11px 13px 4px;background:#fff}
+.vijes-chat-quick button{border:1px solid #dce2ef;border-radius:999px;background:#fff;padding:7px 10px;color:#34425e;font-size:10px;font-weight:700;cursor:pointer}
+.vijes-chat-quick button:hover{border-color:#536df0;color:#344bd0}
+.vijes-chat-form{display:flex;gap:8px;padding:11px 13px;background:#fff}
+.vijes-chat-form input{min-width:0;flex:1;border:1px solid #dce2ed;border-radius:8px;padding:11px;font:inherit;font-size:12px}
+.vijes-chat-form button{border:0;border-radius:8px;padding:0 14px;background:#536df0;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
+.vijes-chat-footnote{margin:0;padding:0 14px 12px;background:#fff;color:#8791a5;font-size:9px;text-align:center}
+.vijes-chat-actions{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.vijes-chat-actions a{display:inline-block;padding:8px 11px;border-radius:7px;background:#101b35;color:#fff;font-size:11px;font-weight:700}
+.vijes-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:600px){#vijes-assistant{right:12px;bottom:12px}.vijes-chat-launcher{padding:12px 15px}.vijes-chat-panel{right:0;bottom:58px;width:min(370px,calc(100vw - 24px));height:min(560px,calc(100dvh - 90px))}}
+@media(prefers-reduced-motion:no-preference){.vijes-chat-launcher{transition:transform .18s ease,box-shadow .18s ease}.vijes-chat-launcher:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(16,27,53,.28)}}
