@@ -198,44 +198,8 @@
   <small>© <span id="year">2026</span> Vijes Digital Links. All rights reserved.</small>
 </footer>
 <script>
- document.getElementById('year').textContent = new Date().getFullYear();
- (function () {
-   var frame = document.getElementById('vijes-billboard-live-ads');
-   if (!frame) return;
-
-   var trustedOrigin = 'https://vijes-ads-manager-y6cp0s.v2.appdeploy.ai';
-   function handleAdFrameMessage(event) {
-     if (event.origin !== trustedOrigin || event.source !== frame.contentWindow) return;
-     var data = event.data || {};
-     if (data.type !== 'vijes-ads-resize') return;
-     var height = Number(data.height);
-     if (!Number.isFinite(height)) return;
-     frame.style.height = Math.max(0, Math.min(1600, height)) + 'px';
-     frame.style.minHeight = height > 0 ? '76px' : '0';
-   }
-
-   function notifyAdFrame() {
-     try {
-       frame.contentWindow.postMessage(
-         { type: 'vijes-ads-parent-ready' },
-         trustedOrigin
-       );
-     } catch (_) {
-       // The embedded feed will still load; a resize notification can be retried.
-     }
-   }
-
-   window.addEventListener('message', handleAdFrameMessage);
-   frame.addEventListener('load', function () {
-     notifyAdFrame();
-     window.setTimeout(notifyAdFrame, 250);
-     window.setTimeout(notifyAdFrame, 1000);
-   });
-   window.addEventListener('beforeunload', function () {
-     window.removeEventListener('message', handleAdFrameMessage);
-   });
- })();
-</script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+ </script>
 <script src="ads.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
