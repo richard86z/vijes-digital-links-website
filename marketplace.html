@@ -128,5 +128,19 @@
   <small>© 2026 Vijes Digital Links. All rights reserved.</small>
 </footer>
 <script src="ads.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+ document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+   e.preventDefault();
+   var box=btn.closest('.nav-dropdown');
+   var open=!box.classList.contains('open');
+   document.querySelectorAll('.nav-dropdown.open').forEach(function(item){item.classList.remove('open');item.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded','false');});
+   box.classList.toggle('open',open);btn.setAttribute('aria-expanded',String(open));
+  });
+ });
+ document.addEventListener('click',function(e){if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown.open').forEach(function(item){item.classList.remove('open');item.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded','false');});});
+});
+</script>
 </body>
 </html>
