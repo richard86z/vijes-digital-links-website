@@ -1,6 +1,8 @@
 /* Vijes Digital Links — global customer support chat.
    This public widget exposes only the visitor chat interface.
-   It does not embed Ads Manager, payment, publishing or admin controls. */
+   It does not embed Ads Manager, payment, publishing or admin controls.
+   The launcher is anchored bottom-left to avoid the platform action menu
+   that can occupy the bottom-right corner on mobile screens. */
 (function () {
   'use strict';
 
@@ -15,8 +17,9 @@
   frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
   frame.style.cssText = [
     'position:fixed',
-    'right:0',
-    'bottom:0',
+    'left:0',
+    'right:auto',
+    'bottom:env(safe-area-inset-bottom, 0px)',
     'width:min(430px,100vw)',
     'height:88px',
     'border:0',
