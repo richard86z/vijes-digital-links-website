@@ -4,6 +4,12 @@
   'use strict';
   if (window.__vijesStage1AssistantLoaded) return;
   window.__vijesStage1AssistantLoaded = true;
+  if (!document.querySelector('link[href*="ads.css"]')) {
+    var chatStyles = document.createElement('link');
+    chatStyles.rel = 'stylesheet';
+    chatStyles.href = 'ads.css';
+    document.head.appendChild(chatStyles);
+  }
 
   var email = 'vijesdigitallinks@gmail.com';
   var whatsapp = '2347038364520';
