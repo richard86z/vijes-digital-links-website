@@ -64,6 +64,14 @@
 .portfolio-cta p{font-size:13px;color:#637589;margin:8px 0 0}
 @media(max-width:800px){.portfolio-hero,.portfolio-section{padding-left:6%;padding-right:6%}.portfolio-principles{grid-template-columns:1fr;gap:15px;padding:55px 6%}.project-grid{grid-template-columns:1fr}}
 @media(max-width:650px){.portfolio-hero{padding:55px 7%}.portfolio-section{padding:58px 7%}.project-art{min-height:205px;padding:17px}.project-copy{padding:22px}.portfolio-cta{padding:38px 7%;align-items:flex-start;flex-direction:column}}
+
+.project-screenshot-wrap{padding:18px;background:#f2eee5;display:flex;justify-content:center;align-items:center;min-height:260px;overflow:hidden}
+.project-screenshot{display:block;width:100%;max-width:430px;height:auto;max-height:560px;object-fit:contain;object-position:center;border-radius:10px;box-shadow:0 14px 34px #061f3520;background:#fff}
+.project-screenshot-wrap.dark{background:#08263d}
+.project-screenshot-wrap.gold{background:#eee5d4}
+.project-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 18px 18px;background:#eee5d4}
+.project-gallery img{width:100%;height:190px;object-fit:contain;object-position:center;border-radius:8px;background:#fff;box-shadow:0 6px 18px #061f3518}
+@media(max-width:650px){.project-screenshot-wrap{padding:14px;min-height:180px}.project-screenshot{max-height:480px}.project-gallery{gap:7px;padding:0 14px 14px}.project-gallery img{height:125px}}
 </style>
 </head>
 <body>
@@ -89,10 +97,7 @@
 </div>
 <div class="project-grid">
 <article class="project-card">
-<div class="project-art">
-<div class="project-window"><div class="window-bar"><i></i><i></i><i></i></div><div class="window-content"><div class="window-brand">VIJES DIGITAL LINKS</div><div class="window-title">Make your brand<br>impossible to ignore.</div><div class="window-line"></div><div class="window-line short"></div><div class="window-tiles"><span></span><span></span><span></span></div></div></div>
-<div class="project-art-label" style="color:#725a31">AGENCY WEBSITE · VIJES-OWNED</div>
-</div>
+<div class="project-screenshot-wrap"><img class="project-screenshot" src="assets/agency-website-homepage.jpg" alt="Screenshot of the Vijes Digital Links agency website homepage"><div class="project-art-label" style="color:#725a31">AGENCY WEBSITE · VIJES-OWNED</div></div>
 <div class="project-copy">
 <div class="project-meta"><span>WEB DESIGN & DIGITAL PRESENCE</span><span class="status">LIVE WEBSITE</span></div>
 <h2>Vijes Digital Links — Agency Website</h2>
@@ -106,10 +111,7 @@
 </div>
 </article>
 <article class="project-card">
-<div class="project-art dark">
-<div class="project-window"><div class="window-bar"><i></i><i></i><i></i></div><div class="window-content"><div class="window-brand">VIJES BILLBOARD</div><div class="window-title">Put your message<br>in front of audiences.</div><div class="window-line"></div><div class="window-line short"></div><div class="window-tiles"><span></span><span></span><span></span></div></div></div>
-<div class="project-art-label">DIGITAL ADVERTISING PLATFORM</div>
-</div>
+<div class="project-screenshot-wrap dark"><img class="project-screenshot" src="assets/digital-billboard-page.jpg" alt="Screenshot of the Vijes Digital Billboard public advertising page"><div class="project-art-label">DIGITAL ADVERTISING PLATFORM</div></div>
 <div class="project-copy">
 <div class="project-meta"><span>ADVERTISING & PLATFORM EXPERIENCE</span><span class="status">PUBLIC PAGE AVAILABLE</span></div>
 <h2>Vijes Digital Billboard</h2>
@@ -123,10 +125,7 @@
 </div>
 </article>
 <article class="project-card">
-<div class="project-art gold">
-<div class="project-window"><div class="window-bar"><i></i><i></i><i></i></div><div class="window-content"><div class="window-brand">VIJES REVENUE ENGINE AI</div><div class="window-title">Research better.<br>Find the right fit.</div><div class="window-line"></div><div class="window-line short"></div><div class="window-tiles"><span></span><span></span><span></span></div></div></div>
-<div class="project-art-label">BUSINESS INTELLIGENCE · PRODUCT IN DEVELOPMENT</div>
-</div>
+<div class="project-screenshot-wrap gold"><img class="project-screenshot" src="assets/revenue-engine-ai-overview.jpg" alt="Screenshot introducing the Vijes Revenue Engine AI platform"><div class="project-art-label" style="color:#725a31">BUSINESS INTELLIGENCE · PRODUCT IN DEVELOPMENT</div></div><div class="project-gallery" aria-label="More Revenue Engine AI screenshots"><img src="assets/revenue-engine-ai-user-paths.jpg" alt="Revenue Engine AI company and provider user paths"><img src="assets/revenue-engine-ai-workflows.jpg" alt="Revenue Engine AI opportunity research and workflow screens"><img src="assets/revenue-engine-ai-marketplace.jpg" alt="Revenue Engine AI marketplace concept"></div>
 <div class="project-copy">
 <div class="project-meta"><span>AI & BUSINESS INTELLIGENCE</span><span class="development">IN DEVELOPMENT</span></div>
 <h2>Vijes Revenue Engine AI</h2>
