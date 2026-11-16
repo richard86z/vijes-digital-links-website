@@ -84,3 +84,26 @@
 .project-screenshot-wrap .project-art-label{z-index:2;left:14px;bottom:12px;text-shadow:0 1px 5px #0008}
 .project-gallery img{object-position:center 48%;}
 @media(max-width:700px){.site-header nav{justify-content:flex-start;gap:8px 17px;flex-wrap:wrap}.nav-dropdown-menu{left:0;top:calc(100% + 2px);min-width:210px}.project-screenshot-wrap{aspect-ratio:.50;max-height:520px}.project-screenshot{inset:-4.5% 0 -3%;height:107.5%}}
+
+/* Primary navigation: five visible items with an accessible About dropdown */
+.site-header nav{position:relative;overflow:visible!important;display:flex;align-items:center;gap:clamp(12px,1.5vw,24px)}
+.nav-dropdown{position:relative;display:block;flex:0 0 auto}
+.nav-dropdown-toggle{appearance:none;border:0;background:transparent;color:inherit;font:inherit;font-size:inherit;min-height:44px;padding:8px 2px;cursor:pointer;white-space:nowrap}
+.nav-dropdown-menu{display:none;position:absolute;top:calc(100% + 5px);left:0;min-width:235px;padding:9px;background:#fff;border:1px solid #e5e7ed;border-radius:11px;box-shadow:0 18px 40px rgba(6,31,53,.18);z-index:9999}
+.nav-dropdown.open .nav-dropdown-menu,.nav-dropdown:focus-within .nav-dropdown-menu,.nav-dropdown:hover .nav-dropdown-menu{display:grid}
+.nav-dropdown-menu a{display:block;padding:10px 12px;border-radius:7px;color:#536078;font-size:13px;white-space:normal}
+.nav-dropdown-menu a:hover,.nav-dropdown-menu a:focus{background:#f5f1e8;color:#8f682e}
+@media(max-width:700px){
+.site-header{display:flex;flex-wrap:wrap;align-items:center}
+.site-header nav{width:100%;display:flex;flex-wrap:wrap;align-items:center;gap:5px 13px;overflow:visible!important;padding:3px 0 8px}
+.site-header nav>a,.site-header nav>.nav-dropdown>.nav-dropdown-toggle{flex:0 0 auto;padding:7px 5px;font-size:12px}
+.site-header nav .nav-cta{margin-left:0}
+.nav-dropdown-menu{top:calc(100% + 2px);left:0;min-width:220px;max-width:min(88vw,280px)}
+}
+
+/* Real screenshot crops: trim phone status/browser bars while keeping content undistorted */
+.project-screenshot-wrap{position:relative!important;display:block!important;width:100%;height:clamp(310px,48vw,560px)!important;min-height:0!important;max-height:none!important;padding:0!important;overflow:hidden!important}
+.project-screenshot-wrap .project-screenshot{position:absolute!important;left:0!important;top:-8%!important;width:100%!important;height:116%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center 50%!important;border-radius:0!important;box-shadow:none!important}
+.project-screenshot-wrap .project-art-label{position:absolute!important;left:14px!important;bottom:12px!important;z-index:3!important;color:#fff!important;text-shadow:0 1px 5px #000!important}
+.project-gallery img{height:190px!important;object-fit:cover!important;object-position:center 48%!important}
+@media(max-width:650px){.project-screenshot-wrap{height:430px!important}.project-screenshot-wrap .project-screenshot{top:-9%!important;height:118%!important}.project-gallery img{height:145px!important}}
