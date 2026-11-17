@@ -265,16 +265,24 @@ document.addEventListener('DOMContentLoaded',function(){
         return;
       }
       try{
-        var imageBuffer;
+        var imageBuffer=null;
+        var readErrors=[];
         if(typeof imageFile.arrayBuffer==='function'){
-          imageBuffer=await imageFile.arrayBuffer();
-        }else{
-          imageBuffer=await new Promise(function(resolve,reject){
-            var reader=new FileReader();
-            reader.onload=function(){resolve(reader.result);};
-            reader.onerror=function(){reject(new Error('Your browser could not access the selected image. Please choose the image again or use a direct image URL.'));};
-            reader.readAsArrayBuffer(imageFile);
-          });
+          try{imageBuffer=await imageFile.arrayBuffer();}catch(arrayBufferError){readErrors.push(arrayBufferError);}
+        }
+        if(!imageBuffer){
+          try{
+            imageBuffer=await new Promise(function(resolve,reject){
+              var reader=new FileReader();
+              reader.onload=function(){resolve(reader.result);};
+              reader.onerror=function(){reject(reader.error||new Error('FileReader could not access this image.'));};
+              reader.onabort=function(){reject(new Error('Image reading was cancelled.'));};
+              reader.readAsArrayBuffer(imageFile);
+            });
+          }catch(fileReaderError){readErrors.push(fileReaderError);}
+        }
+        if(!imageBuffer){
+          throw new Error('Your phone/browser cannot currently read this selected file. Save or copy the image to your device’s Downloads or Pictures folder, then select it again. If it is stored only in Google Drive, WhatsApp, or a cloud app, download it to the device first. You can also use a direct public image URL.');
         }
         var imageBytes=new Uint8Array(imageBuffer);
         var binary='';
