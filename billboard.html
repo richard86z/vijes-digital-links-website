@@ -163,14 +163,34 @@
       <p class="advertise-safety">Please provide only creative materials you own or are authorised to use. Do not include passwords, payment-card details or confidential customer information.</p>
     </div>
     <div class="advertise-form advertise-form-hosted">
-      <p class="contact-label">ADVERTISING ENQUIRY</p>
-      <h3>Request a campaign review</h3>
-      <p class="advert-form-status">Send your business name, advert description, destination link and preferred campaign dates to our team. We will review your request and contact you with availability and a quotation.</p>
-      <div class="billboard-actions">
-        <a class="button button-primary" href="mailto:vijesdigitallinks@gmail.com?subject=Billboard%20Advertising%20Enquiry&body=Business%20name%3A%0AAdvert%20description%3A%0ADestination%20website%20or%20link%3A%0APreferred%20placement%3A%0APreferred%20start%20date%3A%0APreferred%20duration%3A%0AContact%20person%3A">Send an email enquiry <span>→</span></a>
-        <a class="billboard-secondary" href="https://wa.me/2347038364520?text=Hello%20Vijes%20Digital%20Links%2C%20I%20would%20like%20to%20request%20a%20Billboard%20advertising%20campaign.">Enquire on WhatsApp</a>
-      </div>
-      <p class="advertise-safety">Please do not send payment-card details or passwords. Payment instructions are issued only after your campaign has been reviewed and a quotation has been agreed.</p>
+      <p class="contact-label">ONLINE ADVERTISING APPLICATION</p>
+      <h3>Submit your advert details</h3>
+      <p class="advert-form-status">Complete this form to request an advertising placement. Your request goes directly to the Vijes Ads Manager for review. Submission is free and does not publish an advert or trigger a payment.</p>
+      <form id="billboard-enquiry-form" class="billboard-enquiry-form">
+        <div class="billboard-form-grid">
+          <label>Business / organisation name <span>*</span><input name="advertiser" required maxlength="120" autocomplete="organization" placeholder="Your business name"></label>
+          <label>Contact person's full name <span>*</span><input name="contactName" required maxlength="120" autocomplete="name" placeholder="Your full name"></label>
+          <label>Email address <span>*</span><input name="email" type="email" required maxlength="180" autocomplete="email" placeholder="you@example.com"></label>
+          <label>Phone / WhatsApp number <span>*</span><input name="phone" type="tel" required maxlength="40" autocomplete="tel" placeholder="Include country code"></label>
+          <label>Advertising category <span>*</span><select name="category" required><option value="">Select a category</option><option>Fashion & Beauty</option><option>Technology</option><option>Education</option><option>Real Estate</option><option>Food & Agriculture</option><option>Healthcare</option><option>Entertainment</option><option>Business & Professional Services</option><option>Retail & E-commerce</option><option>Other</option></select></label>
+          <label>Preferred placement <span>*</span><select name="placement" required><option value="">Choose a placement</option><option value="Featured spotlight">Featured spotlight</option><option value="Standard listing">Standard listing</option><option value="Category spotlight">Category spotlight</option></select></label>
+          <label>Target market <span>*</span><select name="targetMarket" required><option value="">Choose target market</option><option>Worldwide</option><option>Africa</option><option>Europe</option><option>North America</option><option>South America</option><option>Middle East</option><option>Asia-Pacific</option><option>Specific country</option></select></label>
+          <label>Target country (if applicable)<input name="country" maxlength="100" placeholder="e.g. Canada, Ghana, United Kingdom"></label>
+          <label class="billboard-field-wide">Advert headline <span>*</span><input name="headline" required maxlength="120" placeholder="A short headline for your advert"></label>
+          <label class="billboard-field-wide">Describe the product, service or offer <span>*</span><textarea name="description" required maxlength="900" rows="4" placeholder="Tell visitors what you are promoting (max 900 characters)"></textarea></label>
+          <label class="billboard-field-wide">Website or destination link<input name="destinationUrl" type="url" maxlength="500" placeholder="https://yourwebsite.com"></label>
+          <label class="billboard-field-wide">Advert image URL (optional)<input name="imageUrl" type="url" maxlength="500" placeholder="https://... (direct image link)"><small>Use a public HTTPS image link. You can submit without an image and provide creative later.</small></label>
+          <label>Preferred start date<input name="startDate" type="date"></label>
+          <label>Preferred end date<input name="endDate" type="date"></label>
+          <label>Preferred duration <span>*</span><select name="campaignDuration" required><option value="">Select duration</option><option>7 days</option><option>14 days</option><option>30 days</option><option>60 days</option><option>90 days</option><option>Custom duration — explain below</option></select></label>
+          <label>Additional requirements<textarea name="requirements" rows="3" maxlength="1200" placeholder="Audience, creative requirements or other details"></textarea></label>
+        </div>
+        <p class="billboard-form-terms">By submitting, you confirm that the information is accurate and that you have permission to use the advert materials. Your request will be reviewed; it is not a booking, payment or guarantee of publication.</p>
+        <button class="button button-primary billboard-submit" type="submit"><span class="billboard-submit-label">Submit advertising request →</span></button>
+        <p id="billboard-form-feedback" class="billboard-form-feedback" role="status" aria-live="polite"></p>
+      </form>
+      <p class="advertise-safety">Never enter passwords, payment-card details or confidential customer information. Vijes will issue payment instructions only after review and an agreed quotation.</p>
+      <div class="billboard-form-alternatives"><a href="mailto:vijesdigitallinks@gmail.com?subject=Billboard%20Advertising%20Enquiry">Prefer email?</a><a href="https://wa.me/2347038364520?text=Hello%20Vijes%20Digital%20Links%2C%20I%20would%20like%20to%20request%20a%20Billboard%20advertising%20campaign.">Prefer WhatsApp?</a></div>
     </div>
   </section>
 
@@ -217,5 +237,68 @@ document.addEventListener('DOMContentLoaded',function(){
  document.addEventListener('click',function(e){if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown.open').forEach(function(item){item.classList.remove('open');item.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded','false');});});
 });
 </script>
+
+<script>
+(function(){
+  var form=document.getElementById('billboard-enquiry-form');
+  if(!form)return;
+  var feedback=document.getElementById('billboard-form-feedback');
+  var button=form.querySelector('button[type="submit"]');
+  var label=button.querySelector('.billboard-submit-label');
+  var API='https://api-v2.appdeploy.ai/app/vijes-ads-manager-y6cp0s/api/public/requests';
+  function makeRequestId(){
+    if(window.crypto&&window.crypto.randomUUID)return window.crypto.randomUUID().replace(/-/g,'');
+    return 'vijes'+Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+  }
+  form.addEventListener('submit',async function(event){
+    event.preventDefault();
+    if(!form.reportValidity())return;
+    var data=new FormData(form);
+    var phone=String(data.get('phone')||'').trim();
+    var extra=String(data.get('requirements')||'').trim();
+    var requirements='Advertiser phone / WhatsApp: '+phone+(extra?'\nAdditional requirements: '+extra:'');
+    var payload={
+      requestId:form.dataset.requestId||makeRequestId(),
+      advertiser:String(data.get('advertiser')||'').trim(),
+      contactName:String(data.get('contactName')||'').trim(),
+      email:String(data.get('email')||'').trim(),
+      category:String(data.get('category')||''),
+      placement:String(data.get('placement')||''),
+      targetMarket:String(data.get('targetMarket')||''),
+      country:String(data.get('country')||'').trim(),
+      headline:String(data.get('headline')||'').trim(),
+      description:String(data.get('description')||'').trim(),
+      destinationUrl:String(data.get('destinationUrl')||'').trim(),
+      imageUrl:String(data.get('imageUrl')||'').trim(),
+      startDate:String(data.get('startDate')||''),
+      endDate:String(data.get('endDate')||''),
+      campaignDuration:String(data.get('campaignDuration')||''),
+      requirements:requirements
+    };
+    form.dataset.requestId=payload.requestId;
+    button.disabled=true;
+    label.textContent='Submitting your request…';
+    feedback.className='billboard-form-feedback is-pending';
+    feedback.textContent='Please wait while we securely submit your advertising request.';
+    try{
+      var response=await fetch(API,{method:'POST',mode:'cors',credentials:'omit',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
+      var result=await response.json().catch(function(){return {};});
+      if(!response.ok||!result.ok)throw new Error(result.message||result.error||'We could not submit your request. Please try again.');
+      feedback.className='billboard-form-feedback is-success';
+      feedback.textContent=result.message||'Your advertising request has been received and saved for review.';
+      form.reset();
+      delete form.dataset.requestId;
+      label.textContent='Request submitted ✓';
+    }catch(error){
+      feedback.className='billboard-form-feedback is-error';
+      feedback.textContent=(error&&error.message?error.message:'Submission failed.')+' Your details remain available in the form. You can retry safely.';
+      label.textContent='Try submitting again →';
+    }finally{
+      button.disabled=false;
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
