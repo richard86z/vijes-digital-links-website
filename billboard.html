@@ -179,7 +179,8 @@
           <label class="billboard-field-wide">Advert headline <span>*</span><input name="headline" required maxlength="120" placeholder="A short headline for your advert"></label>
           <label class="billboard-field-wide">Describe the product, service or offer <span>*</span><textarea name="description" required maxlength="900" rows="4" placeholder="Tell visitors what you are promoting (max 900 characters)"></textarea></label>
           <label class="billboard-field-wide">Website or destination link<input name="destinationUrl" type="url" maxlength="500" placeholder="https://yourwebsite.com"></label>
-          <label class="billboard-field-wide">Advert image URL (optional)<input name="imageUrl" type="url" maxlength="500" placeholder="https://... (direct image link)"><small>Use a public HTTPS image link. You can submit without an image and provide creative later.</small></label>
+          <label class="billboard-field-wide">Upload advert image (optional)<input name="imageFile" type="file" accept="image/jpeg,image/png,image/webp"><small>JPG, PNG or WebP, maximum 4 MB. You can also provide a public image link below.</small></label>
+          <label class="billboard-field-wide">Or provide an advert image URL<input name="imageUrl" type="url" maxlength="500" placeholder="https://... (direct image link)"></label>
           <label>Preferred start date<input name="startDate" type="date"></label>
           <label>Preferred end date<input name="endDate" type="date"></label>
           <label>Preferred duration <span>*</span><select name="campaignDuration" required><option value="">Select duration</option><option>7 days</option><option>14 days</option><option>30 days</option><option>60 days</option><option>90 days</option><option>Custom duration — explain below</option></select></label>
@@ -254,6 +255,38 @@ document.addEventListener('DOMContentLoaded',function(){
     event.preventDefault();
     if(!form.reportValidity())return;
     var data=new FormData(form);
+    var imageFile=form.querySelector('[name="imageFile"]').files[0];
+    var uploadedImagePath='';
+    if(imageFile){
+      var allowedTypes=['image/jpeg','image/png','image/webp'];
+      if(allowedTypes.indexOf(imageFile.type)===-1||imageFile.size>4*1024*1024){
+        feedback.className='billboard-form-feedback is-error';
+        feedback.textContent='Choose a JPG, PNG or WebP image no larger than 4 MB.';
+        return;
+      }
+      try{
+        var base64=await new Promise(function(resolve,reject){
+          var reader=new FileReader();
+          reader.onload=function(){resolve(String(reader.result).split(',')[1]||'');};
+          reader.onerror=function(){reject(new Error('The selected image could not be read.'));};
+          reader.readAsDataURL(imageFile);
+        });
+        var imageResponse=await fetch('https://api-v2.appdeploy.ai/app/vijes-ads-manager-y6cp0s/api/public/ad-image',{
+          method:'POST',mode:'cors',credentials:'omit',
+          headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body:JSON.stringify({contentType:imageFile.type,base64Data:base64})
+        });
+        var imageResult=await imageResponse.json().catch(function(){return {};});
+        if(!imageResponse.ok||!imageResult.path)throw new Error(imageResult.message||imageResult.error||'Image upload failed.');
+        uploadedImagePath=imageResult.path;
+      }catch(uploadError){
+        feedback.className='billboard-form-feedback is-error';
+        feedback.textContent=(uploadError&&uploadError.message?uploadError.message:'Image upload failed.')+' You can retry or remove the image and submit the form.';
+        button.disabled=false;
+        label.textContent='Try submitting again →';
+        return;
+      }
+    }
     var phone=String(data.get('phone')||'').trim();
     var extra=String(data.get('requirements')||'').trim();
     var requirements='Advertiser phone / WhatsApp: '+phone+(extra?'\nAdditional requirements: '+extra:'');
@@ -269,7 +302,7 @@ document.addEventListener('DOMContentLoaded',function(){
       headline:String(data.get('headline')||'').trim(),
       description:String(data.get('description')||'').trim(),
       destinationUrl:String(data.get('destinationUrl')||'').trim(),
-      imageUrl:String(data.get('imageUrl')||'').trim(),
+      imageUrl:uploadedImagePath||String(data.get('imageUrl')||'').trim(),
       startDate:String(data.get('startDate')||''),
       endDate:String(data.get('endDate')||''),
       campaignDuration:String(data.get('campaignDuration')||''),
