@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore Vijes Digital Links services, digital resources, business tools, consultations and upcoming Revenue Engine AI plans.">
+  <meta name="description" content="Discover products, services and sellers through the global Vijes Marketplace. Buy, sell and grow with Vijes Digital Links.">
   <meta name="author" content="Vijes Digital Links">
   <meta name="theme-color" content="#101b35">
   <link rel="canonical" href="https://vijesdigitallinks.online/marketplace.html">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="marketplace.css">
-  <title>Digital Services & Business Resources Marketplace | Vijes Digital Links</title>
+  <link rel="stylesheet" href="marketplace.css">\n  <link rel="stylesheet" href="marketplace-storefront.css">
+  <title>Global Products & Services Marketplace | Vijes Digital Links</title>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -60,7 +60,59 @@
 <a class="nav-cta" href="index.html#contact">Contact</a>
 </nav>
 </header>
-<main id="main">
+<main id="main">\n
+<section class="vjm-store" aria-label="Vijes global marketplace">
+  <div class="vjm-previewbar"><span></span> MARKETPLACE DESIGN PREVIEW — sample products and seller listing interactions; live accounts, orders and payments are not connected yet.</div>
+  <section class="vjm-hero">
+    <div class="vjm-hero-copy">
+      <p class="vjm-kicker">VIJES MARKETPLACE · BUY · SELL · DISCOVER</p>
+      <h1>Find what you need.<br><span>Sell to the world.</span></h1>
+      <p>A global marketplace for products and services. Discover items from independent sellers, compare prices and delivery options, and give your business a place to reach new customers.</p>
+      <div class="vjm-hero-actions"><button class="vjm-btn vjm-btn-primary" type="button" data-vjm-open>Start selling free <span>→</span></button><a class="vjm-btn vjm-btn-outline" href="#vjm-products">Explore products</a></div>
+      <div class="vjm-hero-note"><span>Free seller registration planned</span><span>Seller-set delivery fees</span><span>Global discovery</span></div>
+    </div>
+    <div class="vjm-hero-art"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=85" alt="Customer shopping online" fetchpriority="high"><div class="vjm-art-card"><b>One marketplace. More possibilities.</b><span>Products · Services · Local sellers · Global customers</span></div></div>
+  </section>
+  <div class="vjm-search-wrap">
+    <div class="vjm-search" role="search"><input id="vjm-search" type="search" placeholder="Search products, categories or sellers…" aria-label="Search marketplace"><select id="vjm-location" aria-label="Filter by location"><option>All locations</option><option>Nigeria</option><option>United Kingdom</option><option>United States</option><option>Canada</option><option>Ghana</option><option>Kenya</option><option>South Africa</option></select><button type="button" onclick="document.getElementById('vjm-products').scrollIntoView({behavior:'smooth'})">Search marketplace</button></div>
+    <div class="vjm-cats" aria-label="Product categories">
+      <button class="vjm-cat active" type="button" data-category="All">All products</button><button class="vjm-cat" type="button" data-category="Electronics">Electronics</button><button class="vjm-cat" type="button" data-category="Fashion">Fashion</button><button class="vjm-cat" type="button" data-category="Home & Living">Home & Living</button><button class="vjm-cat" type="button" data-category="Beauty">Beauty</button><button class="vjm-cat" type="button" data-category="Sports">Sports</button><button class="vjm-cat" type="button" data-category="Books & Office">Books & Office</button>
+    </div>
+  </div>
+  <section class="vjm-listings" id="vjm-products">
+    <div class="vjm-list-head"><div><p class="vjm-kicker">DISCOVER THE MARKETPLACE</p><h2>Products people are exploring</h2><p>Browse sample listings to preview the shopping experience.</p></div><div class="vjm-list-tools"><span id="vjm-result-count">8 listings shown</span></div></div>
+    <div class="vjm-product-grid" id="vjm-products-grid" aria-live="polite"></div>
+    <p id="vjm-save-message" class="vjm-form-notice" hidden></p>
+  </section>
+  <section class="vjm-sell-strip"><div><h2>Have something to sell?</h2><p>Create a seller profile and list products with your own prices, delivery fees, locations and payment preferences. Standard registration and listings are planned to be free.</p></div><button class="vjm-btn" type="button" data-vjm-open>Become a seller <span>→</span></button></section>
+  <section class="vjm-info-grid" aria-label="How Vijes Marketplace works">
+    <article class="vjm-info"><b>Free to join</b><p>Individuals and businesses can create seller accounts and publish standard listings without a registration fee.</p></article>
+    <article class="vjm-info"><b>You set delivery</b><p>Sellers define delivery fees, delivery areas, estimated times, pickup and free-delivery options.</p></article>
+    <article class="vjm-info"><b>Flexible payment</b><p>Planned options include Pay on Delivery and Pay Through Vijes, subject to supported payment-provider arrangements.</p></article>
+  </section>
+  <div class="vjm-modal" id="vjm-seller-modal" role="dialog" aria-modal="true" aria-labelledby="vjm-seller-title">
+    <div class="vjm-modal-panel"><div class="vjm-modal-head"><div><h2 id="vjm-seller-title">Start selling on Vijes</h2><p>Preview the free seller registration and first product listing flow.</p></div><button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button></div>
+      <form class="vjm-seller-form" id="vjm-seller-form">
+        <div class="vjm-field"><label for="vjm-seller">Seller or business name *</label><input id="vjm-seller" name="seller" required maxlength="100" placeholder="Your store or business name"></div>
+        <div class="vjm-field"><label for="vjm-email">Email address *</label><input id="vjm-email" name="email" type="email" required placeholder="you@example.com"></div>
+        <div class="vjm-field"><label for="vjm-country">Country *</label><input id="vjm-country" name="country" required placeholder="Country"></div>
+        <div class="vjm-field"><label for="vjm-city">City / location *</label><input id="vjm-city" name="city" required placeholder="City or delivery location"></div>
+        <div class="vjm-field"><label for="vjm-title">Product name *</label><input id="vjm-title" name="title" required maxlength="120" placeholder="What are you selling?"></div>
+        <div class="vjm-field"><label for="vjm-category">Category *</label><select id="vjm-category" name="category" required><option value="">Choose category</option><option>Electronics</option><option>Fashion</option><option>Home & Living</option><option>Beauty</option><option>Sports</option><option>Books & Office</option><option>Other</option></select></div>
+        <div class="vjm-field"><label for="vjm-price">Product price *</label><input id="vjm-price" name="price" type="number" min="0.01" step="0.01" required placeholder="0.00"></div>
+        <div class="vjm-field"><label for="vjm-currency">Currency *</label><select id="vjm-currency" name="currency"><option>USD</option><option>NGN</option><option>GBP</option><option>EUR</option></select></div>
+        <div class="vjm-field"><label for="vjm-delivery">Delivery fee *</label><input id="vjm-delivery" name="delivery" type="number" min="0" step="0.01" required value="0"><small>Set 0 for free delivery or pickup.</small></div>
+        <div class="vjm-field"><label for="vjm-image">Product image URL (optional)</label><input id="vjm-image" name="image" type="url" placeholder="https://…"></div>
+        <div class="vjm-field full"><label>Payment methods you accept *</label><div class="vjm-checks"><label><input type="checkbox" name="payment" value="Pay on Delivery" checked> Pay on Delivery</label><label><input type="checkbox" name="payment" value="Pay through Vijes"> Pay Through Vijes</label></div></div>
+        <div class="vjm-field full"><label for="vjm-description">Product description *</label><textarea id="vjm-description" name="description" required maxlength="1000" placeholder="Describe your product, condition, features and delivery arrangements."></textarea></div>
+        <div class="vjm-form-notice">This is a visual prototype only. Your information stays in this browser preview and is not sent to Vijes or saved as a real seller account. Live registration, image storage, moderation, orders and payments will be built in the next stage.</div>
+        <div class="vjm-form-submit"><button class="vjm-btn vjm-btn-outline" type="button" data-vjm-close>Cancel</button><button class="vjm-btn vjm-btn-primary" type="submit">Preview my listing</button></div>
+      </form>
+    </div>
+  </div>
+  <div class="vjm-modal" id="vjm-detail-modal" role="dialog" aria-modal="true" aria-label="Product details"><div class="vjm-modal-panel"><div class="vjm-modal-head"><div><p class="vjm-kicker">PRODUCT DETAILS</p><h2>Marketplace listing</h2></div><button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button></div><div class="vjm-detail-content"></div></div></div>
+</section>
+
   <section class="market-hero">
     <div class="market-hero-copy">
       <p class="eyebrow">THE VIJES MARKETPLACE</p>
@@ -127,7 +179,7 @@
   <div class="footer-links"><a href="index.html#services">Services</a><a href="marketplace.html">Marketplace</a><a href="billboard.html">Billboard</a><a href="resources.html">Resources</a><a href="revenue-engine-ai.html">Revenue Engine AI</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="index.html#contact">Contact</a></div>
   <small>© 2026 Vijes Digital Links. All rights reserved.</small>
 </footer>
-<script src="ads.js" defer></script>
+<script src="marketplace-storefront.js" defer></script>\n<script src="ads.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
  document.querySelectorAll('.nav-dropdown-toggle').forEach(function(btn){
