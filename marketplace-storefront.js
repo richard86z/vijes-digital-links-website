@@ -1,69 +1,183 @@
-
-/* Vijes Marketplace storefront interaction preview.
-   Seller submissions remain in this browser only; no live account, order or payment is created. */
-(function(){
+/* Vijes Marketplace public storefront: live, approved listings only. */
+(function () {
   'use strict';
-  var root=document.querySelector('.vjm-store');
-  if(!root)return;
-  var demo=[
-    {id:'demo-1',title:'Wireless Bluetooth Headphones',category:'Electronics',price:45,currency:'USD',location:'Lagos, Nigeria',delivery:5,image:'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=85',payment:'Both',description:'Wireless over-ear headphones with a comfortable fit and rechargeable battery. Sample marketplace listing.'},
-    {id:'demo-2',title:'Everyday Leather Tote Bag',category:'Fashion',price:38,currency:'USD',location:'London, United Kingdom',delivery:7,image:'https://images.unsplash.com/photo-1590870880860-9e5a9f4f4b5c?auto=format&fit=crop&w=900&q=85',payment:'Pay through Vijes',description:'A versatile everyday tote bag. Sample marketplace listing.'},
-    {id:'demo-3',title:'Handmade Ceramic Tableware Set',category:'Home & Living',price:62,currency:'USD',location:'Accra, Ghana',delivery:9,image:'https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&w=900&q=85',payment:'Pay on Delivery',description:'Handmade ceramic tableware for everyday dining. Sample marketplace listing.'},
-    {id:'demo-4',title:'Modern Desk & Workspace Setup',category:'Home & Living',price:180,currency:'USD',location:'Toronto, Canada',delivery:18,image:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=85',payment:'Both',description:'A clean, modern workspace desk setup. Sample marketplace listing.'},
-    {id:'demo-5',title:'Organic Skincare Essentials',category:'Beauty',price:29,currency:'USD',location:'Nairobi, Kenya',delivery:4,image:'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=900&q=85',payment:'Both',description:'A simple skincare essentials set. Sample marketplace listing.'},
-    {id:'demo-6',title:'Professional Camera Kit',category:'Electronics',price:320,currency:'USD',location:'New York, USA',delivery:22,image:'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=85',payment:'Pay through Vijes',description:'Camera equipment for content creators and professionals. Sample marketplace listing.'},
-    {id:'demo-7',title:'Fitness & Yoga Mat',category:'Sports',price:24,currency:'USD',location:'Cape Town, South Africa',delivery:6,image:'https://images.unsplash.com/photo-1592432678016-e910b452f9a2?auto=format&fit=crop&w=900&q=85',payment:'Pay on Delivery',description:'Non-slip exercise mat for home workouts. Sample marketplace listing.'},
-    {id:'demo-8',title:'Business Planning Notebook',category:'Books & Office',price:16,currency:'USD',location:'Manchester, United Kingdom',delivery:4,image:'https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=900&q=85',payment:'Both',description:'A notebook for business ideas, planning and daily priorities. Sample marketplace listing.'}
-  ];
-  var key='vijes_marketplace_preview_listings_v1';
-  var userItems=[];
-  try{userItems=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(userItems))userItems=[];}catch(e){userItems=[];}
-  var active='All';
-  var searchInput=root.querySelector('#vjm-search');
-  var locationSelect=root.querySelector('#vjm-location');
-  var grid=root.querySelector('#vjm-products-grid');
-  var modal=document.getElementById('vjm-seller-modal');
-  var detailModal=document.getElementById('vjm-detail-modal');
-  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function money(n,c){return (c==='NGN'?'₦':c==='GBP'?'£':c==='EUR'?'€':'$')+Number(n||0).toLocaleString(undefined,{maximumFractionDigits:2});}
-  function allItems(){return userItems.concat(demo);}
-  function render(){
-    var q=(searchInput.value||'').toLowerCase().trim(),loc=locationSelect.value;
-    var rows=allItems().filter(function(p){
-      var matchCat=active==='All'||p.category===active;
-      var matchText=!q||(p.title+' '+p.category+' '+p.location+' '+(p.description||'')).toLowerCase().indexOf(q)>-1;
-      var matchLoc=loc==='All locations'||(p.location||'').toLowerCase().indexOf(loc.toLowerCase())>-1;
-      return matchCat&&matchText&&matchLoc;
+
+  const root = document.querySelector('.vjm-store');
+  if (!root) return;
+
+  const API_URL = 'https://api-v2.appdeploy.ai/app/vijes-marketplace-w0zy9z/api/products';
+  const SELLER_PORTAL_URL = 'https://vijes-marketplace-w0zy9z.v2.appdeploy.ai/';
+  const searchInput = root.querySelector('#vjm-search');
+  const locationSelect = root.querySelector('#vjm-location');
+  const grid = root.querySelector('#vjm-products-grid');
+  const count = root.querySelector('#vjm-result-count');
+  const detailModal = document.getElementById('vjm-detail-modal');
+  let products = [];
+  let activeCategory = 'All';
+
+  function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (character) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[character];
     });
-    grid.innerHTML=rows.length?rows.map(function(p){
-      var user=p.id&&p.id.indexOf('user-')===0;
-      return '<article class="vjm-product"><div class="vjm-product-image"><img src="'+esc(p.image||'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85')+'" alt="'+esc(p.title)+'" loading="lazy"><span class="vjm-product-tag">'+(user?'Your preview listing':'Sample listing')+'</span></div><div class="vjm-product-body"><span class="vjm-product-cat">'+esc(p.category)+'</span><h3>'+esc(p.title)+'</h3><span class="vjm-product-location">⌖ '+esc(p.location)+'</span><div class="vjm-product-price"><strong>'+money(p.price,p.currency)+'</strong><span>'+(p.payment==='Both'?'2 payment options':esc(p.payment))+'</span></div><p class="vjm-product-delivery">'+(Number(p.delivery)===0?'Pickup / free delivery':('Delivery from '+money(p.delivery,p.currency)))+'</p><button class="vjm-product-view" type="button" data-view="'+esc(p.id)+'">View listing</button></div></article>';
-    }).join(''):'<div class="vjm-empty">No listings match those filters. Try another search or location.</div>';
-    root.querySelector('#vjm-result-count').textContent=rows.length+' listings shown';
   }
-  function openModal(m){m.classList.add('open');document.body.style.overflow='hidden';}
-  function closeModal(m){m.classList.remove('open');document.body.style.overflow='';}
-  root.querySelectorAll('[data-vjm-open]').forEach(function(b){b.addEventListener('click',function(){openModal(modal);});});
-  root.querySelectorAll('[data-vjm-close]').forEach(function(b){b.addEventListener('click',function(){closeModal(b.closest('.vjm-modal'));});});
-  [modal,detailModal].forEach(function(m){m.addEventListener('click',function(e){if(e.target===m)closeModal(m);});});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'){[modal,detailModal].forEach(function(m){if(m.classList.contains('open'))closeModal(m);});}});
-  root.querySelectorAll('.vjm-cat').forEach(function(b){b.addEventListener('click',function(){root.querySelectorAll('.vjm-cat').forEach(function(x){x.classList.remove('active');});b.classList.add('active');active=b.dataset.category;render();});});
-  searchInput.addEventListener('input',render);locationSelect.addEventListener('change',render);
-  grid.addEventListener('click',function(e){
-    var b=e.target.closest('[data-view]');if(!b)return;
-    var p=allItems().find(function(x){return x.id===b.dataset.view;});if(!p)return;
-    detailModal.querySelector('.vjm-detail-content').innerHTML='<div class="vjm-detail"><img src="'+esc(p.image)+'" alt="'+esc(p.title)+'"><div><span class="vjm-product-cat">'+esc(p.category)+'</span><h3>'+esc(p.title)+'</h3><p>⌖ '+esc(p.location)+'</p><strong>'+money(p.price,p.currency)+'</strong><p>'+esc(p.description||'Seller product listing.')+'</p><p><b>Delivery fee:</b> '+(Number(p.delivery)===0?'Free / pickup':money(p.delivery,p.currency))+'</p><p><b>Payment:</b> '+esc(p.payment)+'</p><div class="vjm-form-notice">Preview only. Customer accounts, live orders and payment processing will be connected in the next development stage.</div></div></div>';
-    openModal(detailModal);
+
+  function money(value, currency) {
+    const symbols = { NGN: '₦', GBP: '£', EUR: '€', CAD: 'C$', USD: '$' };
+    return (symbols[currency] || (currency ? currency + ' ' : '$')) +
+      Number(value || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
+  }
+
+  function openSellerPortal() {
+    const opened = window.open(SELLER_PORTAL_URL, '_blank', 'noopener');
+    if (!opened) window.location.href = SELLER_PORTAL_URL;
+  }
+
+  root.querySelectorAll('[data-vjm-open]').forEach(function (button) {
+    button.addEventListener('click', openSellerPortal);
   });
-  root.querySelector('#vjm-seller-form').addEventListener('submit',function(e){
-    e.preventDefault();var f=e.currentTarget;
-    var data=new FormData(f);
-    var pay=Array.from(f.querySelectorAll('input[name="payment"]:checked')).map(function(x){return x.value;});
-    var item={id:'user-'+Date.now(),title:data.get('title'),category:data.get('category'),price:Number(data.get('price')),currency:data.get('currency'),location:String(data.get('city')||'')+', '+String(data.get('country')||''),delivery:Number(data.get('delivery')||0),image:data.get('image')||'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85',payment:pay.length>1?'Both':(pay[0]||'Not selected'),description:data.get('description')||'',seller:String(data.get('seller')||''),email:String(data.get('email')||'')};
-    userItems.unshift(item);
-    try{localStorage.setItem(key,JSON.stringify(userItems));}catch(err){}
-    f.reset();closeModal(modal);active='All';root.querySelectorAll('.vjm-cat').forEach(function(x){x.classList.toggle('active',x.dataset.category==='All');});searchInput.value='';locationSelect.value='All locations';render();
-    var msg=root.querySelector('#vjm-save-message');msg.hidden=false;msg.textContent='Your sample listing has been added to this browser preview only. It has not been published or sent to Vijes.';root.querySelector('#vjm-products').scrollIntoView({behavior:'smooth',block:'start'});
+
+  root.querySelectorAll('[data-vjm-close]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      const modal = button.closest('.vjm-modal');
+      if (modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
   });
-  render();
+
+  if (detailModal) {
+    detailModal.addEventListener('click', function (event) {
+      if (event.target === detailModal) {
+        detailModal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && detailModal && detailModal.classList.contains('open')) {
+      detailModal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  function updateLocations() {
+    const current = locationSelect.value || 'All locations';
+    const places = Array.from(new Set(products.map(function (product) {
+      return String(product.country || '').trim();
+    }).filter(Boolean))).sort();
+    locationSelect.innerHTML = '<option value="All locations">All locations</option>' +
+      places.map(function (place) {
+        return '<option value="' + escapeHtml(place) + '">' + escapeHtml(place) + '</option>';
+      }).join('');
+    locationSelect.value = places.includes(current) ? current : 'All locations';
+  }
+
+  function render() {
+    const query = searchInput.value.trim().toLowerCase();
+    const country = locationSelect.value;
+    const visible = products.filter(function (product) {
+      const categoryMatch = activeCategory === 'All' || product.category === activeCategory;
+      const countryMatch = country === 'All locations' || product.country === country;
+      const searchable = [
+        product.title, product.description, product.category, product.city,
+        product.country, product.sellerName
+      ].join(' ').toLowerCase();
+      return categoryMatch && countryMatch && (!query || searchable.includes(query));
+    });
+
+    count.textContent = visible.length + (visible.length === 1 ? ' listing' : ' listings');
+
+    if (!visible.length) {
+      grid.innerHTML = '<div class="vjm-empty"><strong>No approved products yet.</strong><br>Be among the first sellers to list a product on Vijes Marketplace. Listings appear publicly after review.<br><br><button class="vjm-btn vjm-btn-primary" type="button" data-empty-sell>Start selling free →</button></div>';
+      const sellButton = grid.querySelector('[data-empty-sell]');
+      if (sellButton) sellButton.addEventListener('click', openSellerPortal);
+      return;
+    }
+
+    grid.innerHTML = visible.map(function (product) {
+      const image = product.imageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85';
+      const delivery = Number(product.deliveryFee || 0) === 0
+        ? 'Free delivery / pickup'
+        : 'Delivery fee: ' + money(product.deliveryFee, product.currency);
+      return '<article class="vjm-product">' +
+        '<div class="vjm-product-image"><img src="' + escapeHtml(image) + '" alt="' + escapeHtml(product.title) + '" loading="lazy"><span class="vjm-product-tag">Vijes reviewed</span></div>' +
+        '<div class="vjm-product-body">' +
+        '<span class="vjm-product-cat">' + escapeHtml(product.category) + '</span>' +
+        '<h3>' + escapeHtml(product.title) + '</h3>' +
+        '<span class="vjm-product-location">⌖ ' + escapeHtml(product.city) + ', ' + escapeHtml(product.country) + '</span>' +
+        '<div class="vjm-product-price"><strong>' + money(product.price, product.currency) + '</strong><span>' + escapeHtml(product.sellerName || 'Vijes seller') + '</span></div>' +
+        '<p class="vjm-product-delivery">' + escapeHtml(delivery) + '</p>' +
+        '<button class="vjm-product-view" type="button" data-view="' + escapeHtml(product.id) + '">View listing</button>' +
+        '</div></article>';
+    }).join('');
+  }
+
+  function showLoadError(message) {
+    count.textContent = 'Listings unavailable';
+    grid.innerHTML = '<div class="vjm-empty">' + escapeHtml(message) + '<br><br><button class="vjm-btn vjm-btn-outline" type="button" data-retry>Try again</button></div>';
+    const retry = grid.querySelector('[data-retry]');
+    if (retry) retry.addEventListener('click', loadProducts);
+  }
+
+  async function loadProducts() {
+    grid.innerHTML = '<div class="vjm-empty">Loading approved marketplace listings…</div>';
+    try {
+      const response = await fetch(API_URL, { method: 'GET', mode: 'cors', credentials: 'omit' });
+      if (!response.ok) throw new Error('Marketplace service returned ' + response.status);
+      const data = await response.json();
+      products = Array.isArray(data.products) ? data.products : [];
+      updateLocations();
+      render();
+    } catch (error) {
+      console.error('Vijes Marketplace feed error:', error);
+      showLoadError('We could not load marketplace listings right now. Please try again.');
+    }
+  }
+
+  root.querySelectorAll('.vjm-cat').forEach(function (button) {
+    button.addEventListener('click', function () {
+      root.querySelectorAll('.vjm-cat').forEach(function (item) { item.classList.remove('active'); });
+      button.classList.add('active');
+      activeCategory = button.dataset.category || 'All';
+      render();
+    });
+  });
+
+  searchInput.addEventListener('input', render);
+  locationSelect.addEventListener('change', render);
+
+  grid.addEventListener('click', function (event) {
+    const button = event.target.closest('[data-view]');
+    if (!button || !detailModal) return;
+    const product = products.find(function (item) { return item.id === button.dataset.view; });
+    if (!product) return;
+    const payment = Array.isArray(product.paymentMethods) ? product.paymentMethods.join(' · ') : 'Contact seller';
+    const delivery = Number(product.deliveryFee || 0) === 0
+      ? 'Free delivery / pickup'
+      : money(product.deliveryFee, product.currency);
+    detailModal.querySelector('.vjm-detail-content').innerHTML =
+      '<div class="vjm-detail"><img src="' + escapeHtml(product.imageUrl || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=85') + '" alt="' + escapeHtml(product.title) + '">' +
+      '<div><span class="vjm-product-cat">' + escapeHtml(product.category) + '</span>' +
+      '<h3>' + escapeHtml(product.title) + '</h3>' +
+      '<p>⌖ ' + escapeHtml(product.city) + ', ' + escapeHtml(product.country) + '</p>' +
+      '<strong>' + money(product.price, product.currency) + '</strong>' +
+      '<p>' + escapeHtml(product.description) + '</p>' +
+      '<p><b>Delivery fee:</b> ' + escapeHtml(delivery) + '</p>' +
+      '<p><b>Estimated delivery:</b> ' + escapeHtml(product.deliveryEstimate || 'Confirm with seller') + '</p>' +
+      '<p><b>Seller:</b> ' + escapeHtml(product.sellerName || 'Vijes seller') + '</p>' +
+      '<p><b>Payment preference:</b> ' + escapeHtml(payment) + '</p>' +
+      '<div class="vjm-form-notice">Buyer enquiries, checkout and payment processing will be enabled in the next stage. Contact and order options are not active yet.</div></div></div>';
+    detailModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+
+  loadProducts();
 })();
