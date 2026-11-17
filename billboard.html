@@ -265,12 +265,25 @@ document.addEventListener('DOMContentLoaded',function(){
         return;
       }
       try{
-        var base64=await new Promise(function(resolve,reject){
-          var reader=new FileReader();
-          reader.onload=function(){resolve(String(reader.result).split(',')[1]||'');};
-          reader.onerror=function(){reject(new Error('The selected image could not be read.'));};
-          reader.readAsDataURL(imageFile);
-        });
+        var imageBuffer;
+        if(typeof imageFile.arrayBuffer==='function'){
+          imageBuffer=await imageFile.arrayBuffer();
+        }else{
+          imageBuffer=await new Promise(function(resolve,reject){
+            var reader=new FileReader();
+            reader.onload=function(){resolve(reader.result);};
+            reader.onerror=function(){reject(new Error('Your browser could not access the selected image. Please choose the image again or use a direct image URL.'));};
+            reader.readAsArrayBuffer(imageFile);
+          });
+        }
+        var imageBytes=new Uint8Array(imageBuffer);
+        var binary='';
+        var chunkSize=0x8000;
+        for(var offset=0;offset<imageBytes.length;offset+=chunkSize){
+          binary+=String.fromCharCode.apply(null,imageBytes.subarray(offset,Math.min(offset+chunkSize,imageBytes.length)));
+        }
+        var base64=btoa(binary);
+        if(!base64)throw new Error('The selected image appears to be empty. Please choose another image.');
         var imageResponse=await fetch('https://api-v2.appdeploy.ai/app/vijes-ads-manager-y6cp0s/api/public/ad-image',{
           method:'POST',mode:'cors',credentials:'omit',
           headers:{'Content-Type':'application/json','Accept':'application/json'},
