@@ -282,7 +282,23 @@ document.addEventListener('DOMContentLoaded',function(){
           }catch(fileReaderError){readErrors.push(fileReaderError);}
         }
         if(!imageBuffer){
-          throw new Error('Your phone/browser cannot currently read this selected file. Save or copy the image to your device’s Downloads or Pictures folder, then select it again. If it is stored only in Google Drive, WhatsApp, or a cloud app, download it to the device first. You can also use a direct public image URL.');
+          var objectUrl='';
+          try{
+            objectUrl=URL.createObjectURL(imageFile);
+            var localImageResponse=await fetch(objectUrl);
+            if(!localImageResponse.ok)throw new Error('The browser could not open the selected gallery image.');
+            imageBuffer=await localImageResponse.arrayBuffer();
+          }catch(objectUrlError){
+            readErrors.push(objectUrlError);
+          }finally{
+            if(objectUrl)URL.revokeObjectURL(objectUrl);
+          }
+        }
+        if(!imageBuffer){
+          var readDetail=readErrors.length&&readErrors[readErrors.length-1]
+            ? String(readErrors[readErrors.length-1].message||readErrors[readErrors.length-1]).slice(0,180)
+            : 'No browser file-reading method succeeded.';
+          throw new Error('Chrome selected the image but could not retrieve its contents ('+readDetail+'). This appears to be an Android Gallery/file-access issue, not an advert-form validation error. Please try Chrome site permissions and Android Files access, or use the image URL field for now.');
         }
         var imageBytes=new Uint8Array(imageBuffer);
         var binary='';
