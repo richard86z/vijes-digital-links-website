@@ -96,8 +96,29 @@
   }
 
   function openSellerPortal() {
-    const opened = window.open(SELLER_PORTAL_URL, '_blank', 'noopener');
-    if (!opened) window.location.href = SELLER_PORTAL_URL;
+    let modal = document.getElementById('vjm-seller-portal-frame');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'vjm-seller-portal-frame';
+      modal.setAttribute('role', 'dialog');
+      modal.setAttribute('aria-modal', 'true');
+      modal.setAttribute('aria-label', 'Vijes Seller Centre');
+      modal.style.cssText = 'position:fixed;inset:0;z-index:10050;background:rgba(8,16,32,.82);display:flex;align-items:center;justify-content:center;padding:clamp(8px,2vw,24px);';
+      modal.innerHTML = '<section style="display:flex;flex-direction:column;width:min(1440px,100%);height:min(92vh,980px);background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.35)">' +
+        '<header style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;background:#101b35;color:#fff;flex:0 0 auto">' +
+        '<div><strong style="display:block;font-size:15px">VIJES SELLER CENTRE</strong><span style="font-size:12px;opacity:.8">Register, manage listings and process customer orders</span></div>' +
+        '<button type="button" data-seller-frame-close aria-label="Close Seller Centre" style="border:0;border-radius:10px;padding:9px 14px;background:#d7f36a;color:#101b35;font-weight:700;cursor:pointer">Close ×</button></header>' +
+        '<iframe title="Vijes Seller Centre registration and dashboard" src="' + SELLER_PORTAL_URL + '" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:100%;border:0;background:#f7f8fb"></iframe>' +
+        '</section>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function (event) {
+        if (event.target === modal || event.target.closest('[data-seller-frame-close]')) {
+          modal.remove();
+          document.body.style.overflow = '';
+        }
+      });
+    }
+    document.body.style.overflow = 'hidden';
   }
 
   root.querySelectorAll('[data-vjm-open]').forEach(function (button) {
