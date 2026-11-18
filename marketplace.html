@@ -63,12 +63,13 @@
 <main id="main">\n
 <section class="vjm-store" aria-label="Vijes global marketplace">
   <div class="vjm-previewbar"><span></span> Free seller registration · Browse approved products · Seller-set delivery fees</div>
+  <div class="vjm-topbar"><span>Shop directly on Vijes Digital Links</span><div><button type="button" data-vjm-cart-open>Basket <b id="vjm-cart-count">0</b></button><button type="button" data-vjm-orders-open>My Orders</button></div></div>
   <section class="vjm-hero">
     <div class="vjm-hero-copy">
       <p class="vjm-kicker">VIJES MARKETPLACE · BUY · SELL · DISCOVER</p>
       <h1>Find what you need.<br><span>Sell to the world.</span></h1>
       <p>A global marketplace for products and services. Discover items from independent sellers, compare prices and delivery options, and give your business a place to reach new customers.</p>
-      <div class="vjm-hero-actions"><a class="vjm-btn vjm-btn-primary" href="https://vijes-marketplace-w0zy9z.v2.appdeploy.ai/" target="_blank" rel="noopener">Browse & place orders <span>→</span></a><button class="vjm-btn vjm-btn-outline" type="button" data-vjm-open>Start selling free <span>→</span></button><a class="vjm-btn vjm-btn-outline" href="#vjm-products">Explore products</a></div>
+      <div class="vjm-hero-actions"><button class="vjm-btn vjm-btn-primary" type="button" data-vjm-cart-open>Open basket <span>→</span></button><button class="vjm-btn vjm-btn-outline" type="button" data-vjm-open>Start selling free <span>→</span></button><a class="vjm-btn vjm-btn-outline" href="#vjm-products">Explore products</a></div>
       <div class="vjm-hero-note"><span>Free seller registration</span><span>Seller-set delivery fees</span><span>Global discovery</span></div>
     </div>
     <div class="vjm-hero-art"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=85" alt="Customer shopping online" fetchpriority="high"><div class="vjm-art-card"><b>One marketplace. More possibilities.</b><span>Products · Services · Local sellers · Global customers</span></div></div>
@@ -111,6 +112,37 @@
     </div>
   </div>
   <div class="vjm-modal" id="vjm-detail-modal" role="dialog" aria-modal="true" aria-label="Product details"><div class="vjm-modal-panel"><div class="vjm-modal-head"><div><p class="vjm-kicker">PRODUCT DETAILS</p><h2>Marketplace listing</h2></div><button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button></div><div class="vjm-detail-content"></div></div></div>
+  <div class="vjm-modal" id="vjm-cart-modal" role="dialog" aria-modal="true" aria-label="Shopping basket">
+    <div class="vjm-modal-panel">
+      <div class="vjm-modal-head"><div><p class="vjm-kicker">YOUR CHECKLIST</p><h2>Shopping basket</h2><p>Review your selected products before checkout.</p></div><button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button></div>
+      <div id="vjm-cart-content"></div>
+    </div>
+  </div>
+  <div class="vjm-modal" id="vjm-checkout-modal" role="dialog" aria-modal="true" aria-label="Secure order checkout">
+    <div class="vjm-modal-panel">
+      <div class="vjm-modal-head"><div><p class="vjm-kicker">PLACE YOUR ORDER</p><h2>Delivery details</h2><p>Guest checkout — no account required.</p></div><button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button></div>
+      <div id="vjm-checkout-summary"></div>
+      <form id="vjm-checkout-form" class="vjm-seller-form">
+        <div class="vjm-field"><label for="vjm-buyer-name">Full name *</label><input id="vjm-buyer-name" name="name" required maxlength="100" autocomplete="name"></div>
+        <div class="vjm-field"><label for="vjm-buyer-email">Email address *</label><input id="vjm-buyer-email" name="email" type="email" required maxlength="180" autocomplete="email"></div>
+        <div class="vjm-field"><label for="vjm-buyer-phone">Phone number *</label><input id="vjm-buyer-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel"></div>
+        <div class="vjm-field"><label for="vjm-buyer-country">Country *</label><input id="vjm-buyer-country" name="country" required maxlength="80" autocomplete="country-name"></div>
+        <div class="vjm-field"><label for="vjm-buyer-city">City / town *</label><input id="vjm-buyer-city" name="city" required maxlength="80" autocomplete="address-level2"></div>
+        <div class="vjm-field"><label for="vjm-buyer-postal">Postal code</label><input id="vjm-buyer-postal" name="postalCode" maxlength="30" autocomplete="postal-code"></div>
+        <div class="vjm-field full"><label for="vjm-buyer-address">Full delivery address *</label><textarea id="vjm-buyer-address" name="address" required maxlength="300" autocomplete="street-address" placeholder="House number, street, area and any useful directions"></textarea></div>
+        <div class="vjm-field full"><label for="vjm-buyer-note">Delivery notes (optional)</label><textarea id="vjm-buyer-note" name="deliveryNote" maxlength="300" placeholder="Landmark, preferred delivery time or other instructions"></textarea></div>
+        <div class="vjm-form-notice">Payment method: <strong>Cash on Delivery</strong>. Pay the seller when your order arrives. Online payment through Vijes is not active yet.</div>
+        <p id="vjm-checkout-error" class="vjm-checkout-error full" role="alert" hidden></p>
+        <div class="vjm-form-submit"><button class="vjm-btn vjm-btn-outline" type="button" data-vjm-back-cart>Back to basket</button><button class="vjm-btn vjm-btn-primary" type="submit" id="vjm-place-order">Place order</button></div>
+      </form>
+    </div>
+  </div>
+  <div class="vjm-modal" id="vjm-orders-modal" role="dialog" aria-modal="true" aria-label="My orders">
+    <div class="vjm-modal-panel">
+      <div class="vjm-modal-head"><div><p class="vjm-kicker">ORDER TRACKING</p><h2>My Orders</h2><p>Your order references are saved in this browser on this device.</p></div><button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button></div>
+      <div id="vjm-orders-content"></div>
+    </div>
+  </div>
 </section>
 
   <section class="market-hero">
