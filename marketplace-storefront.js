@@ -174,7 +174,7 @@
       '<p><b>Estimated delivery:</b> ' + escapeHtml(product.deliveryEstimate || 'Confirm with seller') + '</p>' +
       '<p><b>Seller:</b> ' + escapeHtml(product.sellerName || 'Vijes seller') + '</p>' +
       '<p><b>Payment preference:</b> ' + escapeHtml(payment) + '</p>' +
-      '<div class="vjm-form-notice">Buyer enquiries, checkout and payment processing will be enabled in the next stage. Contact and order options are not active yet.</div></div></div>';
+      '<div class="vjm-form-notice">To add this product to your basket, place a Cash on Delivery order and track delivery, open the full Vijes Marketplace. Search for this listing by its product name there. Online payment through Vijes is not active.</div><p><a class="vjm-btn vjm-btn-primary" href="https://vijes-marketplace-w0zy9z.v2.appdeploy.ai/" target="_blank" rel="noopener">Open full Marketplace to order →</a></p></div></div>';
     detailModal.classList.add('open');
     document.body.style.overflow = 'hidden';
   });
