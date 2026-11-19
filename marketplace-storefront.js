@@ -96,23 +96,24 @@
   }
 
   function openSellerPortal() {
-    let modal = document.getElementById('vjm-seller-portal-frame');
+    let modal = document.getElementById('vjm-seller-start-guide');
     if (!modal) {
       modal = document.createElement('div');
-      modal.id = 'vjm-seller-portal-frame';
+      modal.id = 'vjm-seller-start-guide';
       modal.setAttribute('role', 'dialog');
       modal.setAttribute('aria-modal', 'true');
-      modal.setAttribute('aria-label', 'Vijes Seller Centre');
-      modal.style.cssText = 'position:fixed;inset:0;z-index:10050;background:rgba(8,16,32,.82);display:flex;align-items:center;justify-content:center;padding:clamp(8px,2vw,24px);';
-      modal.innerHTML = '<section style="display:flex;flex-direction:column;width:min(1440px,100%);height:min(92vh,980px);background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.35)">' +
-        '<header style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;background:#101b35;color:#fff;flex:0 0 auto">' +
-        '<div><strong style="display:block;font-size:15px">VIJES SELLER CENTRE</strong><span style="font-size:12px;opacity:.8">Register, manage listings and process customer orders</span></div>' +
-        '<button type="button" data-seller-frame-close aria-label="Close Seller Centre" style="border:0;border-radius:10px;padding:9px 14px;background:#d7f36a;color:#101b35;font-weight:700;cursor:pointer">Close ×</button></header>' +
-        '<iframe title="Vijes Seller Centre registration and dashboard" src="' + SELLER_PORTAL_URL + '" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin" style="display:block;width:100%;height:100%;border:0;background:#f7f8fb"></iframe>' +
+      modal.setAttribute('aria-labelledby', 'vjm-seller-guide-title');
+      modal.style.cssText = 'position:fixed;inset:0;z-index:10050;background:rgba(8,16,32,.82);display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto;';
+      modal.innerHTML = '<section style="width:min(620px,100%);max-height:92vh;overflow:auto;background:#fff;color:#15213a;border-radius:20px;padding:clamp(20px,4vw,34px);box-shadow:0 24px 80px rgba(0,0,0,.35)">' +
+        '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px"><div><span style="display:inline-block;background:#eef5d7;color:#41540b;padding:6px 10px;border-radius:30px;font-size:11px;font-weight:800;letter-spacing:.08em">FREE SELLER REGISTRATION</span><h2 id="vjm-seller-guide-title" style="margin:14px 0 8px;font-size:26px;line-height:1.15">Start selling on Vijes</h2></div><button type="button" data-seller-guide-close aria-label="Close" style="border:0;background:#f0f2f6;border-radius:10px;padding:8px 12px;font-size:20px;cursor:pointer">×</button></div>' +
+        '<p style="color:#526078;line-height:1.6;margin:0 0 18px">You are in the right place. Seller registration and your private Seller Centre open in a secure separate page. Your customers will continue shopping and checking out here on the Vijes website.</p>' +
+        '<ol style="padding-left:22px;margin:0 0 20px;color:#26344d;line-height:1.65"><li style="padding:5px 0"><b>Create an account or sign in.</b> Use an email or an available sign-in option on the secure page.</li><li style="padding:5px 0"><b>Complete your seller profile.</b> Add your shop name, seller type, country, city and phone number.</li><li style="padding:5px 0"><b>Add your first product.</b> Upload a clear photo, enter the description, price, currency and delivery details.</li><li style="padding:5px 0"><b>Submit for review.</b> Your listing appears publicly after Vijes approves it.</li></ol>' +
+        '<div style="background:#f5f7fa;border:1px solid #e5e9f0;border-radius:12px;padding:14px;margin-bottom:20px"><b style="display:block;margin-bottom:5px">Before you continue</b><span style="color:#526078;font-size:13px;line-height:1.5">Registration is free. Keep your sign-in details private. Do not pay anyone to create a seller account. Seller Centre currently opens on the AppDeploy secure portal while we work on bringing the seller experience directly onto this website.</span></div>' +
+        '<div style="display:flex;flex-wrap:wrap;gap:10px"><a href="' + SELLER_PORTAL_URL + '" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;background:#15213a;color:#fff;text-decoration:none;font-weight:800;padding:13px 18px;border-radius:10px;min-height:46px">Continue to Seller Centre ↗</a><button type="button" data-seller-guide-close style="border:1px solid #d8deea;background:#fff;color:#26344d;font-weight:700;padding:13px 18px;border-radius:10px;cursor:pointer">Maybe later</button></div>' +
         '</section>';
       document.body.appendChild(modal);
       modal.addEventListener('click', function (event) {
-        if (event.target === modal || event.target.closest('[data-seller-frame-close]')) {
+        if (event.target === modal || event.target.closest('[data-seller-guide-close]')) {
           modal.remove();
           document.body.style.overflow = '';
         }
