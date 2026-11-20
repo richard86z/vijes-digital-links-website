@@ -8,3 +8,6 @@
 .resource-breadcrumb{font-size:11px;color:#66718a;margin-bottom:22px}.resource-breadcrumb a{color:#536df0}
 @media(max-width:800px){.resource-grid{grid-template-columns:1fr 1fr}.resource-hero{padding:60px 7%}.article-head{padding-top:55px}}
 @media(max-width:560px){.resource-grid{grid-template-columns:1fr}.resource-wrap{padding:48px 6% 65px}.article-body{font-size:14px}.article-body h2{font-size:23px}.article-hero{padding:55px 6%}}
+
+/* Research evidence inserts: dated case studies, source links and quotations. */
+.article-body .research-evidence{margin:42px 0 48px;padding:28px 0 8px;border-top:1px solid #e6e9f1;border-bottom:1px solid #e6e9f1}.article-body .research-evidence h2{margin-top:0}.article-body .research-evidence h3{margin-top:27px}.article-body .research-evidence a{color:#536df0;text-decoration:underline;text-underline-offset:2px}.article-body .research-evidence .research-note{font-size:12px;line-height:1.75;color:#68758a;margin-top:20px}.article-body .research-evidence blockquote{margin:8px 0;font:600 16px/1.7 Manrope,sans-serif;color:#17233d}.article-body .research-evidence .article-callout{margin:22px 0}
