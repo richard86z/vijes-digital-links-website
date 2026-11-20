@@ -22,7 +22,7 @@ The website form has already been tested successfully: a test submission was acc
 7. Do not put a Google password, API key or spreadsheet edit link in the public website code.
 
 ## Important privacy and marketing safeguards
-- - The marketing checkbox must be optional and unchecked by default.
+- The marketing checkbox must be optional and unchecked by default.
 - Enquiry processing consent and marketing consent must be separate.
 - Only records with Marketing consent = Yes may be considered for a marketing audience.
 - Do not send bulk marketing until a managed unsubscribe route and suppression list are implemented and tested.
