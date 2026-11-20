@@ -11,3 +11,8 @@
 
 /* Research evidence inserts: dated case studies, source links and quotations. */
 .article-body .research-evidence{margin:42px 0 48px;padding:28px 0 8px;border-top:1px solid #e6e9f1;border-bottom:1px solid #e6e9f1}.article-body .research-evidence h2{margin-top:0}.article-body .research-evidence h3{margin-top:27px}.article-body .research-evidence a{color:#536df0;text-decoration:underline;text-underline-offset:2px}.article-body .research-evidence .research-note{font-size:12px;line-height:1.75;color:#68758a;margin-top:20px}.article-body .research-evidence blockquote{margin:8px 0;font:600 16px/1.7 Manrope,sans-serif;color:#17233d}.article-body .research-evidence .article-callout{margin:22px 0}
+
+/* Practical reader worksheets added to the Knowledge Centre */
+.action-toolkit{margin:2.25rem 0;padding:1.5rem;border:1px solid rgba(39,91,150,.22);border-left:4px solid #2476c7;border-radius:14px;background:rgba(36,118,199,.055)}
+.action-toolkit h2{margin-top:0}.action-toolkit p:last-child,.action-toolkit ul:last-child,.action-toolkit ol:last-child{margin-bottom:0}.action-toolkit li{margin:.55rem 0}.action-toolkit p,.action-toolkit li{line-height:1.7}
+@media(max-width:640px){.action-toolkit{padding:1rem;margin:1.5rem 0}}
