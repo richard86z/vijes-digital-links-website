@@ -136,7 +136,7 @@
 <a href="index.html#about">About Vijes</a>
 <a href="index.html#services">Our Services</a>
 <a href="index.html#revenue-engine">Revenue Engine AI</a>
-<a href="index.html#partnerships">Partnerships</a>
+<a href="partnerships.html">Partnership Opportunities</a>
 <a href="index.html#approach">Our Approach</a>
 <a href="portfolio.html">Portfolio & Projects</a>
 <a href="resources.html">Resources</a>
@@ -271,7 +271,7 @@
 
   <div class="partner-cta">
     <p>Have a partnership idea or an organisational requirement?</p>
-    <a class="button button-light" href="#contact" data-service="Business or Institutional Partnership">Discuss a partnership <span>→</span></a>
+    <a class="button button-light" href="partnerships.html">Explore partnership opportunities <span>→</span></a>
   </div>
 </section>
 
@@ -530,7 +530,17 @@ try {
   var submissionPending = false;
   var timeoutId = null;
 
+  var trustedResponseOrigins = [
+    'https://script.google.com',
+    'https://script.googleusercontent.com'
+  ];
+
   window.addEventListener('message', function(event) {
+    // Accept completion messages only from the active response iframe and
+    // the expected Google Apps Script origins.
+    if (event.source !== iframe.contentWindow ||
+        trustedResponseOrigins.indexOf(event.origin) === -1) return;
+
     if (!event.data ||
         event.data.type !== 'vijes-enquiry-result') {
       return;
