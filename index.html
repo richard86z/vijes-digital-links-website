@@ -323,7 +323,7 @@
   <div>
     <p class="eyebrow">LET'S BUILD WHAT'S NEXT</p>
     <h2>Have a goal in mind?<br><span>Let's talk.</span></h2>
-    <p class="contact-copy">Tell us what you are working on, where you need support and what success looks like. Share a few details below and we'll help you take the conversation forward.</p>
+    <p class="contact-copy">Tell us what you are working on, where you need support and what success looks like. Share your requirements, preferred start timeframe and contact preference. We'll review the enquiry and, where appropriate, clarify the scope before preparing a proposal.</p>
     <div class="direct-contact">
       <a href="mailto:vijesdigitallinks@gmail.com">vijesdigitallinks@gmail.com ↗</a>
     </div>
@@ -365,8 +365,41 @@
     </div>
 
     <div class="form-row">
-      <label for="details">Tell us a little about your project *</label>
-      <textarea id="details" name="details" rows="4" required maxlength="2000" placeholder="Your goals, requirements and preferred timeframe..."></textarea>
+      <label for="website-url">Your website or social media page</label>
+      <input id="website-url" name="websiteUrl" type="url" maxlength="500" placeholder="https://... (optional)">
+    </div>
+
+    <div class="form-row">
+      <label for="phone">Phone or WhatsApp number</label>
+      <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="Include country code (optional)">
+    </div>
+
+    <div class="form-row">
+      <label for="timeframe">When would you like to start?</label>
+      <select id="timeframe" name="timeframe">
+        <option value="">Select a preferred timeframe (optional)</option>
+        <option>As soon as possible</option>
+        <option>Within 2–4 weeks</option>
+        <option>Within 1–3 months</option>
+        <option>More than 3 months from now</option>
+        <option>Still planning / exploring</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="contact-preference">How should we contact you?</label>
+      <select id="contact-preference" name="contactPreference">
+        <option value="">Email is fine (default)</option>
+        <option>Email</option>
+        <option>Phone call</option>
+        <option>WhatsApp</option>
+        <option>Video meeting (by arrangement)</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="details">Tell us about your project and goals *</label>
+      <textarea id="details" name="details" rows="5" required maxlength="3000" placeholder="What are you trying to achieve? Who is your target audience or market? What support do you need? Mention any important requirements, deliverables or budget guidance you are comfortable sharing."></textarea>
     </div>
 
     <label class="consent">
@@ -390,7 +423,7 @@
       Send enquiry securely <span>→</span>
     </button>
 
-    <p class="form-note">Your enquiry is submitted from this website, saved in our private enquiry records and sent to our business inbox. Your details are not added to marketing updates unless you tick the optional box above.</p>
+    <p class="form-note">Submitting an enquiry does not confirm a booking or guarantee a quotation. We'll review the information and may contact you to clarify scope, deliverables, timing and budget before proposing next steps. Your details are not added to marketing updates unless you tick the optional box above.</p>
 
     <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
   </form>
