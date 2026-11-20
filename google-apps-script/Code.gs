@@ -121,7 +121,7 @@ function isValidWebUrl_(value) {
   let host = authority;
   if (portSeparator >= 0) {
     const port = authority.slice(portSeparator + 1);
-    if (!/^\\d{1,5}$/.test(port)) return false;
+    if (!port || port.length > 5 || Array.from(port).some(character => character < '0' || character > '9')) return false;
     const portNumber = Number(port);
     if (portNumber < 1 || portNumber > 65535) return false;
     host = authority.slice(0, portSeparator);
