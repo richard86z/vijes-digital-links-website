@@ -17,3 +17,10 @@
 @media(max-width:600px){.market-hero h1{font-size:42px}.market-trust{grid-template-columns:1fr 1fr;padding:20px 7%}.market-section{padding:58px 6%}.offer-grid,.digital-grid{grid-template-columns:1fr}.offer-card>p:not(.offer-price),.digital-card>p,.digital-card h3{min-height:0}.market-inline-cta,.consultation-panel{align-items:flex-start;flex-direction:column}.market-inline-cta a{white-space:normal}.subscription-list{grid-template-columns:1fr}.engine-market{padding-top:58px;padding-bottom:58px}.market-partners{padding:45px 6%}.market-contact-actions{flex-direction:column;align-items:stretch}.market-contact-actions a{text-align:center}.engine-waitlist{margin:15px 0 0;display:block}}
 
 .digital-order{display:inline-block;margin-top:17px;padding:11px 14px;border-radius:6px;background:#536df0;color:#fff;font-size:11px;font-weight:800;text-decoration:none}.digital-order:hover,.digital-order:focus{background:#354fd0}.digital-bottom .available-badge{color:#17633d;background:#e5f7ed}
+
+/* Marketplace seller and buyer standards note */
+.vjm-marketplace-standards{padding:52px 7%;background:#f5f7fb;border-top:1px solid var(--market-line);border-bottom:1px solid var(--market-line)}
+.vjm-standards-inner{max-width:1120px;margin:0 auto}
+.vjm-standards-inner h2{font:800 clamp(25px,3vw,34px)/1.2 Manrope,sans-serif;color:var(--market-ink);margin:10px 0 16px}
+.vjm-standards-inner p{max-width:930px;color:var(--market-muted);font-size:12px;line-height:1.9;margin:10px 0}
+.vjm-standards-inner a{color:var(--market-blue);font-weight:700;text-decoration:underline;text-underline-offset:3px}
