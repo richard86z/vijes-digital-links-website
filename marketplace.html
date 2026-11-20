@@ -48,7 +48,7 @@
 <a href="index.html#about">About Vijes</a>
 <a href="index.html#services">Our Services</a>
 <a href="index.html#revenue-engine">Revenue Engine AI</a>
-<a href="index.html#partnerships">Partnerships</a>
+<a href="partnerships.html">Partnerships</a>
 <a href="index.html#approach">Our Approach</a>
 <a href="portfolio.html">Portfolio & Projects</a>
 <a href="resources.html">Resources</a>
@@ -84,7 +84,7 @@
     </div>
   </div>
   <section class="vjm-listings" id="vjm-products">
-    <div class="vjm-list-head"><div><p class="vjm-kicker">DISCOVER THE MARKETPLACE</p><h2>Products available on Vijes</h2><p>Approved seller listings appear here. New products are added as sellers join.</p></div><div class="vjm-list-tools"><span id="vjm-result-count">8 listings shown</span></div></div>
+    <div class="vjm-list-head"><div><p class="vjm-kicker">DISCOVER THE MARKETPLACE</p><h2>Products available on Vijes</h2><p>Approved seller listings appear here. New products are added as sellers join.</p></div><div class="vjm-list-tools"><span id="vjm-result-count">Loading approved listings…</span></div></div>
     <div class="vjm-product-grid" id="vjm-products-grid" aria-live="polite"></div>
     <p id="vjm-save-message" class="vjm-form-notice" hidden></p>
   </section>
@@ -92,26 +92,20 @@
   <section class="vjm-info-grid" aria-label="How Vijes Marketplace works">
     <article class="vjm-info"><b>Free to join</b><p>Individuals and businesses can create seller accounts and publish standard listings without a registration fee.</p></article>
     <article class="vjm-info"><b>You set delivery</b><p>Sellers define delivery fees, delivery areas, estimated times, pickup and free-delivery options.</p></article>
-    <article class="vjm-info"><b>Flexible payment</b><p>Planned options include Pay on Delivery and Pay Through Vijes, subject to supported payment-provider arrangements.</p></article>
+    <article class="vjm-info"><b>Cash on Delivery</b><p>Checkout currently supports Cash on Delivery for eligible listings. Online payment through Vijes is not active.</p></article>
   </section>
   <div class="vjm-modal" id="vjm-seller-modal" role="dialog" aria-modal="true" aria-labelledby="vjm-seller-title">
-    <div class="vjm-modal-panel"><div class="vjm-modal-head"><div><h2 id="vjm-seller-title">Start selling on Vijes</h2><p>Preview the free seller registration and first product listing flow.</p></div><button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button></div>
-      <form class="vjm-seller-form" id="vjm-seller-form">
-        <div class="vjm-field"><label for="vjm-seller">Seller or business name *</label><input id="vjm-seller" name="seller" required maxlength="100" placeholder="Your store or business name"></div>
-        <div class="vjm-field"><label for="vjm-email">Email address *</label><input id="vjm-email" name="email" type="email" required placeholder="you@example.com"></div>
-        <div class="vjm-field"><label for="vjm-country">Country *</label><input id="vjm-country" name="country" required placeholder="Country"></div>
-        <div class="vjm-field"><label for="vjm-city">City / location *</label><input id="vjm-city" name="city" required placeholder="City or delivery location"></div>
-        <div class="vjm-field"><label for="vjm-title">Product name *</label><input id="vjm-title" name="title" required maxlength="120" placeholder="What are you selling?"></div>
-        <div class="vjm-field"><label for="vjm-category">Category *</label><select id="vjm-category" name="category" required><option value="">Choose category</option><option>Electronics</option><option>Fashion</option><option>Home & Living</option><option>Beauty</option><option>Sports</option><option>Books & Office</option><option>Other</option></select></div>
-        <div class="vjm-field"><label for="vjm-price">Product price *</label><input id="vjm-price" name="price" type="number" min="0.01" step="0.01" required placeholder="0.00"></div>
-        <div class="vjm-field"><label for="vjm-currency">Currency *</label><select id="vjm-currency" name="currency"><option>USD</option><option>NGN</option><option>GBP</option><option>EUR</option></select></div>
-        <div class="vjm-field"><label for="vjm-delivery">Delivery fee *</label><input id="vjm-delivery" name="delivery" type="number" min="0" step="0.01" required value="0"><small>Set 0 for free delivery or pickup.</small></div>
-        <div class="vjm-field"><label for="vjm-image">Product image URL (optional)</label><input id="vjm-image" name="image" type="url" placeholder="https://…"></div>
-        <div class="vjm-field full"><label>Payment methods you accept *</label><div class="vjm-checks"><label><input type="checkbox" name="payment" value="Pay on Delivery" checked> Pay on Delivery</label><label><input type="checkbox" name="payment" value="Pay through Vijes"> Pay Through Vijes</label></div></div>
-        <div class="vjm-field full"><label for="vjm-description">Product description *</label><textarea id="vjm-description" name="description" required maxlength="1000" placeholder="Describe your product, condition, features and delivery arrangements."></textarea></div>
-        <div class="vjm-form-notice">This is a visual prototype only. Your information stays in this browser preview and is not sent to Vijes or saved as a real seller account. Live registration, image storage, moderation, orders and payments will be built in the next stage.</div>
-        <div class="vjm-form-submit"><button class="vjm-btn vjm-btn-outline" type="button" data-vjm-close>Cancel</button><button class="vjm-btn vjm-btn-primary" type="submit">Preview my listing</button></div>
-      </form>
+    <div class="vjm-modal-panel">
+      <div class="vjm-modal-head">
+        <div><h2 id="vjm-seller-title">Start selling on Vijes</h2><p>Open the secure Seller Centre to create your seller account and submit a listing.</p></div>
+        <button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button>
+      </div>
+      <p class="vjm-form-notice">Seller registration, profile management, product image uploads and listing submissions are handled in the separate Vijes Marketplace Seller Centre. Standard seller registration and listings are free. Submitted products are reviewed before appearing in the public catalogue.</p>
+      <p>Use the secure portal to create or access your account, complete your seller profile and submit your first listing. Keep your sign-in details private and do not pay anyone to register you.</p>
+      <div class="vjm-form-submit">
+        <a class="vjm-btn vjm-btn-primary" href="https://vijes-marketplace-w0zy9z.v2.appdeploy.ai/" target="_blank" rel="noopener noreferrer">Continue to Seller Centre ↗</a>
+        <button class="vjm-btn vjm-btn-outline" type="button" data-vjm-close>Maybe later</button>
+      </div>
     </div>
   </div>
   <div class="vjm-modal" id="vjm-detail-modal" role="dialog" aria-modal="true" aria-label="Product details"><div class="vjm-modal-panel"><div class="vjm-modal-head"><div><p class="vjm-kicker">PRODUCT DETAILS</p><h2>Marketplace listing</h2></div><button class="vjm-modal-close" type="button" data-vjm-close aria-label="Close">×</button></div><div class="vjm-detail-content"></div></div></div>
