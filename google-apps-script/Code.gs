@@ -9,7 +9,7 @@ const CONFIG = {
   MAX_NAME: 100,
   MAX_ORG: 120,
   MAX_EMAIL: 160,
-  MAX_DETAILS: 2000,
+  MAX_DETAILS: 3000,
   ALLOWED_SERVICES: [
     'Digital Marketing', 'Social Media Management', 'Content & Email Marketing',
     'Websites & Digital Design', 'Automation & Operations',
@@ -68,8 +68,47 @@ function initialiseVijesEnquirySystem() {
     sheet.getRange('A:A').setNumberFormat('yyyy-mm-dd hh:mm:ss');
     sheet.getRange('H:H').setNumberFormat('yyyy-mm-dd hh:mm:ss');
   }
+  const enquirySheet = ss.getSheetByName('Enquiries');
+  if (!enquirySheet) throw new Error('The Enquiries worksheet is missing.');
+  ensureEnquiryHeaders_(enquirySheet);
   Logger.log('Private enquiry spreadsheet: ' + ss.getUrl());
   return ss.getUrl();
+}
+
+const ENQUIRY_HEADERS = [
+  'Received at', 'Name', 'Organisation', 'Email', 'Service',
+  'Project details', 'Marketing consent', 'Consent timestamp', 'Status',
+  'Phone / WhatsApp', 'Website / social profile',
+  'Preferred timeframe', 'Contact preference'
+];
+
+/**
+ * Adds newly supported enquiry fields without rearranging existing columns
+ * or changing previously stored enquiry rows.
+ */
+function ensureEnquiryHeaders_(sheet) {
+  const lastColumn = Math.max(sheet.getLastColumn(), 1);
+  const existing = sheet.getRange(1, 1, 1, lastColumn)
+    .getDisplayValues()[0]
+    .map(value => String(value || '').trim());
+  const missing = ENQUIRY_HEADERS.filter(header => existing.indexOf(header) === -1);
+  if (missing.length) {
+    sheet.getRange(1, lastColumn + 1, 1, missing.length).setValues([missing]);
+  }
+  const finalHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getDisplayValues()[0];
+  sheet.getRange(1, 1, 1, finalHeaders.length).setFontWeight('bold');
+  sheet.setColumnWidth(6, 420);
+  return finalHeaders;
+}
+
+function isValidWebUrl_(value) {
+  if (!value) return true;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+  } catch (err) {
+    return false;
+  }
 }
 
 function doPost(e) {
@@ -83,6 +122,10 @@ function doPost(e) {
     const name = clean_(p.name, CONFIG.MAX_NAME);
     const organisation = clean_(p.organisation, CONFIG.MAX_ORG);
     const email = clean_(p.email, CONFIG.MAX_EMAIL).toLowerCase();
+    const phone = clean_(p.phone, 40);
+    const websiteUrl = clean_(p.websiteUrl, 500);
+    const timeframe = clean_(p.timeframe, 100);
+    const contactPreference = clean_(p.contactPreference, 80);
     const service = clean_(p.service, 100);
     const details = clean_(p.details, CONFIG.MAX_DETAILS);
     const consent = String(p.marketingConsent || '') === 'yes';
@@ -98,6 +141,9 @@ function doPost(e) {
     }
     if (CONFIG.ALLOWED_SERVICES.indexOf(service) === -1) {
       return responsePage_({ ok: false, error: 'Invalid service selection.' }, token);
+    }
+    if (!isValidWebUrl_(websiteUrl)) {
+      return responsePage_({ ok: false, error: 'Please enter a valid website or social profile URL.' }, token);
     }
 
     const lock = LockService.getScriptLock();
@@ -115,13 +161,27 @@ function doPost(e) {
       if (!sheetId) throw new Error('Enquiry system has not been initialised.');
       const sheet = SpreadsheetApp.openById(sheetId).getSheetByName('Enquiries');
       if (!sheet) throw new Error('Enquiries sheet is missing.');
+      const headers = ensureEnquiryHeaders_(sheet);
 
       const now = new Date();
-      sheet.appendRow([
-        now, safeCell_(name), safeCell_(organisation), safeCell_(email),
-        safeCell_(service), safeCell_(details), consent ? 'Yes' : 'No',
-        consent ? now : '', 'New'
-      ]);
+      const rowValues = {
+        'Received at': now,
+        'Name': safeCell_(name),
+        'Organisation': safeCell_(organisation),
+        'Email': safeCell_(email),
+        'Phone / WhatsApp': safeCell_(phone),
+        'Website / social profile': safeCell_(websiteUrl),
+        'Service': safeCell_(service),
+        'Preferred timeframe': safeCell_(timeframe),
+        'Contact preference': safeCell_(contactPreference),
+        'Project details': safeCell_(details),
+        'Marketing consent': consent ? 'Yes' : 'No',
+        'Consent timestamp': consent ? now : '',
+        'Status': 'New'
+      };
+      sheet.appendRow(headers.map(header =>
+        Object.prototype.hasOwnProperty.call(rowValues, header) ? rowValues[header] : ''
+      ));
       cache.put(key, '1', 60);
 
       let notificationSent = true;
@@ -133,7 +193,11 @@ function doPost(e) {
           'Name: ' + name,
           'Organisation: ' + (organisation || 'Not provided'),
           'Email: ' + email,
+          'Phone / WhatsApp: ' + (phone || 'Not provided'),
+          'Website or social profile: ' + (websiteUrl || 'Not provided'),
           'Service: ' + service,
+          'Preferred timeframe: ' + (timeframe || 'Not provided'),
+          'Preferred contact method: ' + (contactPreference || 'Not provided'),
           'Marketing updates consent: ' + (consent ? 'YES' : 'NO'),
           '',
           'Project details:',
