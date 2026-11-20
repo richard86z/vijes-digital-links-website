@@ -103,9 +103,37 @@ function ensureEnquiryHeaders_(sheet) {
 
 function isValidWebUrl_(value) {
   if (!value) return true;
+
   // Apps Script V8 does not expose the browser/Node URL constructor.
-  // Accept only ordinary HTTP(S) URLs with a public, domain-based hostname.
-  return /^https?:\\/\\/(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z]{2,}(?::[0-9]{1,5})?(?:[/?#][^\\s]*)?$/i.test(value);
+  // Validate a normal HTTP(S) URL using its scheme and hostname instead.
+  const schemeEnd = value.indexOf('://');
+  if (schemeEnd < 0) return false;
+  const scheme = value.slice(0, schemeEnd).toLowerCase();
+  if (scheme !== 'https' && scheme !== 'http') return false;
+
+  const authority = value.slice(schemeEnd + 3)
+    .split('/')[0]
+    .split('?')[0]
+    .split('#')[0];
+  if (!authority || authority.indexOf('@') !== -1) return false;
+
+  const portSeparator = authority.lastIndexOf(':');
+  let host = authority;
+  if (portSeparator >= 0) {
+    const port = authority.slice(portSeparator + 1);
+    if (!/^\\d{1,5}$/.test(port)) return false;
+    const portNumber = Number(port);
+    if (portNumber < 1 || portNumber > 65535) return false;
+    host = authority.slice(0, portSeparator);
+  }
+
+  if (!host || host.length > 253 || host.indexOf('.') < 1) return false;
+  const labels = host.split('.');
+  if (labels[labels.length - 1].length < 2) return false;
+
+  return labels.every(label =>
+    /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i.test(label)
+  );
 }
 
 function doPost(e) {
