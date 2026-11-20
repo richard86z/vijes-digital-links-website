@@ -103,12 +103,9 @@ function ensureEnquiryHeaders_(sheet) {
 
 function isValidWebUrl_(value) {
   if (!value) return true;
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
-  } catch (err) {
-    return false;
-  }
+  // Apps Script V8 does not expose the browser/Node URL constructor.
+  // Accept only ordinary HTTP(S) URLs with a public, domain-based hostname.
+  return /^https?:\\/\\/(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z]{2,}(?::[0-9]{1,5})?(?:[/?#][^\\s]*)?$/i.test(value);
 }
 
 function doPost(e) {
