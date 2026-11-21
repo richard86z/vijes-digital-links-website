@@ -248,6 +248,18 @@ document.addEventListener('DOMContentLoaded',function(){
   var feedback=document.getElementById('billboard-form-feedback');
   var button=form.querySelector('button[type="submit"]');
   var label=button.querySelector('.billboard-submit-label');
+  var videoInput=form.querySelector('[name="videoFile"]');
+  var videoLink=form.querySelector('[name="videoUrl"]');
+  videoInput.addEventListener('change',function(){
+    delete form.dataset.uploadedVideoPath;
+    if(videoInput.files&&videoInput.files.length)videoLink.value='';
+  });
+  videoLink.addEventListener('input',function(){
+    if(videoLink.value.trim()){
+      videoInput.value='';
+      delete form.dataset.uploadedVideoPath;
+    }
+  });
   var API='https://api-v2.appdeploy.ai/app/vijes-ads-manager-y6cp0s/api/public/requests';
   function makeRequestId(){
     if(window.crypto&&window.crypto.randomUUID)return window.crypto.randomUUID().replace(/-/g,'');
@@ -258,9 +270,9 @@ document.addEventListener('DOMContentLoaded',function(){
     if(!form.reportValidity())return;
     var data=new FormData(form);
     var imageFile=form.querySelector('[name="imageFile"]').files[0];
-    var videoFile=form.querySelector('[name="videoFile"]').files[0];
-    var videoUrl=String(data.get('videoUrl')||'').trim();
-    var videoType=videoUrl?'youtube':'';
+    var videoFile=videoInput.files[0];
+    var videoUrl=form.dataset.uploadedVideoPath||String(data.get('videoUrl')||'').trim();
+    var videoType=form.dataset.uploadedVideoPath?'uploaded':(videoUrl?'youtube':'');
     var uploadedImagePath='';
     if(imageFile){
       var allowedTypes=['image/jpeg','image/png','image/webp'];
@@ -302,7 +314,7 @@ document.addEventListener('DOMContentLoaded',function(){
         return;
       }
     }
-    if(videoFile){
+    if(videoFile&&!form.dataset.uploadedVideoPath){
       var videoContentType=String(videoFile.type||'').toLowerCase();
       var videoName=String(videoFile.name||'').toLowerCase();
       if(!videoContentType){
@@ -342,6 +354,7 @@ document.addEventListener('DOMContentLoaded',function(){
         if(!videoResponse.ok||!videoResult.path)throw new Error(videoResult.message||videoResult.error||'Video upload failed.');
         videoUrl=videoResult.path;
         videoType='uploaded';
+        form.dataset.uploadedVideoPath=videoUrl;
       }catch(videoError){
         feedback.className='billboard-form-feedback is-error';
         feedback.textContent=(videoError&&videoError.message?videoError.message:'Video upload failed.')+' You can retry or remove the video and submit a YouTube link instead.';
@@ -386,6 +399,7 @@ document.addEventListener('DOMContentLoaded',function(){
       feedback.textContent=result.message||'Your advertising request has been received and saved for review.';
       form.reset();
       delete form.dataset.requestId;
+      delete form.dataset.uploadedVideoPath;
       label.textContent='Request submitted ✓';
     }catch(error){
       feedback.className='billboard-form-feedback is-error';
