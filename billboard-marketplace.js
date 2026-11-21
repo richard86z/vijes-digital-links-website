@@ -24,6 +24,20 @@
     return node;
   }
 
+  function youtubeEmbedUrl(value) {
+    if (!value) return '';
+    try {
+      var url = new URL(value);
+      var host = url.hostname.toLowerCase().replace('www.', '');
+      var parts = url.pathname.split('/').filter(Boolean);
+      var id = host === 'youtu.be' ? parts[0] : (url.searchParams.get('v') || (['shorts', 'embed'].indexOf(parts[0]) !== -1 ? parts[1] : ''));
+      if (['youtube.com', 'm.youtube.com', 'youtu.be'].indexOf(host) === -1 || !/^[A-Za-z0-9_-]{11}$/.test(id || '')) return '';
+      return 'https://www.youtube-nocookie.com/embed/' + id;
+    } catch (error) {
+      return '';
+    }
+  }
+
   function addDirectory() {
     var intro = document.querySelector('.billboard-intro');
     if (!intro || document.querySelector('.billboard-marketplace-directory')) return;
@@ -84,6 +98,35 @@
   function renderCampaign(ad) {
     var card = element('article', 'billboard-live-card');
     card.setAttribute('data-campaign-id', ad.id || '');
+
+    if (ad.videoUrl && ad.videoType === 'uploaded') {
+      var video = element('video', 'billboard-live-video');
+      video.src = ad.videoUrl;
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      video.setAttribute('aria-label', (ad.advertiser || 'Advertiser') + ' video advert');
+      video.style.width = '100%';
+      video.style.aspectRatio = '16 / 9';
+      video.style.objectFit = 'contain';
+      video.style.background = '#071b29';
+      card.appendChild(video);
+    } else if (ad.videoUrl && ad.videoType === 'youtube') {
+      var embedUrl = youtubeEmbedUrl(ad.videoUrl);
+      if (embedUrl) {
+        var frame = element('iframe', 'billboard-live-video');
+        frame.src = embedUrl;
+        frame.title = (ad.advertiser || 'Advertiser') + ' YouTube video advert';
+        frame.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        frame.setAttribute('allowfullscreen', '');
+        frame.setAttribute('loading', 'lazy');
+        frame.style.width = '100%';
+        frame.style.aspectRatio = '16 / 9';
+        frame.style.border = '0';
+        frame.style.background = '#071b29';
+        card.appendChild(frame);
+      }
+    }
 
     if (ad.imageUrl) {
       var image = element('img', 'billboard-live-image');
