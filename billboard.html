@@ -181,6 +181,8 @@
           <label class="billboard-field-wide">Website or destination link<input name="destinationUrl" type="url" maxlength="500" placeholder="https://yourwebsite.com"></label>
           <label class="billboard-field-wide">Upload advert image (optional)<input name="imageFile" type="file" accept="image/jpeg,image/png,image/webp"><small>JPG, PNG or WebP, maximum 4 MB. You can also provide a public image link below.</small></label>
           <label class="billboard-field-wide">Or provide an advert image URL<input name="imageUrl" type="url" maxlength="500" placeholder="https://... (direct image link)"></label>
+          <label class="billboard-field-wide">Upload video advert (optional)<input name="videoFile" type="file" accept="video/mp4,video/webm"><small>MP4 or WebM, maximum 4 MB. Short, compressed clips work best for direct upload.</small></label>
+          <label class="billboard-field-wide">Or paste a YouTube video link<input name="videoUrl" type="url" maxlength="500" placeholder="https://youtu.be/... or https://www.youtube.com/watch?v=..."><small>Supports standard YouTube videos, Shorts and youtu.be links. Choose direct upload or a YouTube link.</small></label>
           <label>Preferred start date<input name="startDate" type="date"></label>
           <label>Preferred end date<input name="endDate" type="date"></label>
           <label>Preferred duration <span>*</span><select name="campaignDuration" required><option value="">Select duration</option><option>7 days</option><option>14 days</option><option>30 days</option><option>60 days</option><option>90 days</option><option>Custom duration — explain below</option></select></label>
@@ -256,6 +258,9 @@ document.addEventListener('DOMContentLoaded',function(){
     if(!form.reportValidity())return;
     var data=new FormData(form);
     var imageFile=form.querySelector('[name="imageFile"]').files[0];
+    var videoFile=form.querySelector('[name="videoFile"]').files[0];
+    var videoUrl=String(data.get('videoUrl')||'').trim();
+    var videoType=videoUrl?'youtube':'';
     var uploadedImagePath='';
     if(imageFile){
       var allowedTypes=['image/jpeg','image/png','image/webp'];
@@ -297,6 +302,54 @@ document.addEventListener('DOMContentLoaded',function(){
         return;
       }
     }
+    if(videoFile){
+      var videoContentType=String(videoFile.type||'').toLowerCase();
+      var videoName=String(videoFile.name||'').toLowerCase();
+      if(!videoContentType){
+        if(/\\.mp4$/.test(videoName))videoContentType='video/mp4';
+        else if(/\\.webm$/.test(videoName))videoContentType='video/webm';
+      }
+      if(['video/mp4','video/webm'].indexOf(videoContentType)===-1||videoFile.size>4*1024*1024){
+        feedback.className='billboard-form-feedback is-error';
+        feedback.textContent='Choose an MP4 or WebM video no larger than 4 MB. For larger videos, paste a YouTube link.';
+        button.disabled=false;
+        label.textContent='Try submitting again →';
+        return;
+      }
+      try{
+        button.disabled=true;
+        label.textContent='Uploading video…';
+        feedback.className='billboard-form-feedback is-pending';
+        feedback.textContent='Uploading your video advert securely. Please keep this page open.';
+        var videoBase64=await new Promise(function(resolve,reject){
+          var reader=new FileReader();
+          reader.onload=function(){
+            var result=typeof reader.result==='string'?reader.result:'';
+            var encoded=result.split(',')[1]||'';
+            if(encoded)resolve(encoded);else reject(new Error('The selected video could not be read.'));
+          };
+          reader.onerror=function(){reject(new Error('The selected video could not be read.'));};
+          reader.readAsDataURL(videoFile);
+        });
+        var videoResponse=await fetch('https://api-v2.appdeploy.ai/app/vijes-ads-manager-y6cp0s/api/public/ad-video',{
+          method:'POST',
+          mode:'cors',
+          credentials:'omit',
+          headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body:JSON.stringify({fileName:videoFile.name,contentType:videoContentType,base64Data:videoBase64})
+        });
+        var videoResult=await videoResponse.json().catch(function(){return {};});
+        if(!videoResponse.ok||!videoResult.path)throw new Error(videoResult.message||videoResult.error||'Video upload failed.');
+        videoUrl=videoResult.path;
+        videoType='uploaded';
+      }catch(videoError){
+        feedback.className='billboard-form-feedback is-error';
+        feedback.textContent=(videoError&&videoError.message?videoError.message:'Video upload failed.')+' You can retry or remove the video and submit a YouTube link instead.';
+        button.disabled=false;
+        label.textContent='Try submitting again →';
+        return;
+      }
+    }
     var phone=String(data.get('phone')||'').trim();
     var extra=String(data.get('requirements')||'').trim();
     var requirements='Advertiser phone / WhatsApp: '+phone+(extra?'\nAdditional requirements: '+extra:'');
@@ -313,6 +366,8 @@ document.addEventListener('DOMContentLoaded',function(){
       description:String(data.get('description')||'').trim(),
       destinationUrl:String(data.get('destinationUrl')||'').trim(),
       imageUrl:uploadedImagePath||String(data.get('imageUrl')||'').trim(),
+      videoUrl:videoUrl,
+      videoType:videoType,
       startDate:String(data.get('startDate')||''),
       endDate:String(data.get('endDate')||''),
       campaignDuration:String(data.get('campaignDuration')||''),
