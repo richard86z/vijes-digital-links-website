@@ -260,6 +260,8 @@ document.addEventListener('DOMContentLoaded',function(){
       delete form.dataset.uploadedVideoPath;
     }
   });
+  form.addEventListener('input',function(){delete form.dataset.requestId;});
+  form.addEventListener('change',function(){delete form.dataset.requestId;});
   var API='https://api-v2.appdeploy.ai/app/vijes-ads-manager-y6cp0s/api/public/requests';
   function makeRequestId(){
     if(window.crypto&&window.crypto.randomUUID)return window.crypto.randomUUID().replace(/-/g,'');
