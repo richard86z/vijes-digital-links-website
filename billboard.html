@@ -224,7 +224,7 @@
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
  </script>
-<script src="billboard-marketplace.js?v=20261116-live-feed" defer></script>
+<script src="billboard-marketplace.js?v=20261121-video-ads" defer></script>
 <script src="ads.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
@@ -306,8 +306,8 @@ document.addEventListener('DOMContentLoaded',function(){
       var videoContentType=String(videoFile.type||'').toLowerCase();
       var videoName=String(videoFile.name||'').toLowerCase();
       if(!videoContentType){
-        if(/\\.mp4$/.test(videoName))videoContentType='video/mp4';
-        else if(/\\.webm$/.test(videoName))videoContentType='video/webm';
+        if(videoName.endsWith('.mp4'))videoContentType='video/mp4';
+        else if(videoName.endsWith('.webm'))videoContentType='video/webm';
       }
       if(['video/mp4','video/webm'].indexOf(videoContentType)===-1||videoFile.size>4*1024*1024){
         feedback.className='billboard-form-feedback is-error';
