@@ -115,6 +115,7 @@
   ]
 }
 </script>
+  <link rel="stylesheet" href="/vijes-spotlight.css">
 </head>
 
 <body>
@@ -646,5 +647,6 @@ document.addEventListener('DOMContentLoaded',function(){
  document.addEventListener('click',function(e){if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown.open').forEach(function(item){item.classList.remove('open');item.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded','false');});});
 });
 </script>
+<script src="/vijes-spotlight.js" defer></script>
 </body>
 </html>
