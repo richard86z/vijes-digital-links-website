@@ -1,6 +1,31 @@
-/* Vijes Global Spotlight: lightweight, site-wide advertiser discovery */
+/* Vijes Global Spotlight and Google Analytics 4 */
 (function () {
   'use strict';
+
+  // Google Analytics 4 — property web stream for vijesdigitallinks.online.
+  // The measurement ID is public configuration, never a secret.
+  var measurementId = 'G-1K4ENKK6V4';
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', measurementId, {
+    anonymize_ip: true,
+    send_page_view: true
+  });
+
+  if (!document.querySelector('script[data-vijes-ga="true"]')) {
+    var gaScript = document.createElement('script');
+    gaScript.async = true;
+    gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(measurementId);
+    gaScript.setAttribute('data-vijes-ga', 'true');
+    document.head.appendChild(gaScript);
+  }
+
+  function track(eventName, parameters) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, parameters || {});
+    }
+  }
 
   var path = (window.location.pathname || '/').toLowerCase();
   if (path.indexOf('billboard.html') !== -1 || path.indexOf('advert-admin') !== -1) return;
@@ -38,6 +63,15 @@
   floating.setAttribute('aria-label', 'Advertise with Vijes Billboard');
   floating.innerHTML = '<span class="vjs-float-dot"></span><span><b>Advertise with Vijes</b><small>Explore Billboard</small></span><span class="vjs-float-arrow" aria-hidden="true">↗</span>';
   document.body.appendChild(floating);
+
+  section.querySelectorAll('a[href="/billboard.html"]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      track('billboard_cta_click', { placement: 'page_banner', page_path: path });
+    });
+  });
+  floating.addEventListener('click', function () {
+    track('billboard_cta_click', { placement: 'floating_shortcut', page_path: path });
+  });
 
   var close = document.createElement('button');
   close.className = 'vijes-spotlight-dismiss';
