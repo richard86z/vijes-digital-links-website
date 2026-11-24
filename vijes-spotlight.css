@@ -1,0 +1,21 @@
+/* Vijes Global Spotlight component */
+.vijes-spotlight-banner{position:relative;isolation:isolate;display:flex;align-items:center;gap:22px;max-width:1180px;margin:34px auto;padding:clamp(22px,3vw,34px);overflow:hidden;border-radius:22px;color:#fff;background:radial-gradient(ellipse at 90% 0%,rgba(68,190,128,.27),transparent 42%),linear-gradient(118deg,#101b35 0%,#183b57 58%,#0c654f 100%);box-shadow:0 18px 46px rgba(13,35,58,.16)}
+.vijes-spotlight-banner:after{content:"";position:absolute;z-index:-1;width:250px;height:250px;right:12%;top:-170px;border:1px solid rgba(255,255,255,.18);border-radius:50%;box-shadow:0 0 0 28px rgba(255,255,255,.035),0 0 0 58px rgba(255,255,255,.025)}
+.vjs-spotlight-mark{flex:0 0 58px;width:58px;height:58px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.35);border-radius:17px;font-size:28px;font-weight:900;color:#fff;background:rgba(255,255,255,.1)}
+.vjs-spotlight-mark span{color:#70d78e}
+.vjs-spotlight-copy{flex:1;min-width:0}
+.vjs-spotlight-kicker{margin:0 0 7px;color:#8ce5a7;font-size:10px;font-weight:800;letter-spacing:.15em}
+.vjs-spotlight-copy h2{margin:0 0 7px;color:#fff;font-size:clamp(20px,2.5vw,29px);line-height:1.18}
+.vjs-spotlight-copy>p:last-child{margin:0;max-width:700px;color:rgba(255,255,255,.78);font-size:13px;line-height:1.7}
+.vjs-spotlight-button{flex:0 0 auto;display:inline-flex;align-items:center;gap:13px;padding:14px 18px;border-radius:999px;background:#8ce5a7;color:#102b36!important;text-decoration:none!important;font-size:12px;font-weight:850;transition:transform .2s,background .2s}
+.vjs-spotlight-button:hover{transform:translateY(-2px);background:#b0f4c2}
+.vijes-spotlight-float{position:fixed;z-index:9998;right:18px;bottom:18px;display:flex;align-items:center;gap:10px;padding:12px 16px 12px 13px;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:#101b35;color:#fff!important;text-decoration:none!important;box-shadow:0 12px 35px rgba(7,22,42,.28);font-size:12px;transition:transform .2s,box-shadow .2s}
+.vijes-spotlight-float:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(7,22,42,.35)}
+.vijes-spotlight-float b,.vijes-spotlight-float small{display:block}
+.vijes-spotlight-float b{font-size:12px}
+.vijes-spotlight-float small{margin-top:2px;color:#a8c7d3;font-size:10px}
+.vjs-float-dot{width:9px;height:9px;border-radius:50%;background:#79e39b;box-shadow:0 0 0 5px rgba(121,227,155,.13)}
+.vjs-float-arrow{font-size:18px;color:#8ce5a7}
+.vijes-spotlight-dismiss{position:absolute;right:4px;top:2px;border:0;background:transparent;color:#9eb4c4;font-size:16px;cursor:pointer}
+@media(max-width:720px){.vijes-spotlight-banner{margin:24px 14px;align-items:flex-start;flex-wrap:wrap;gap:14px;border-radius:17px}.vjs-spotlight-mark{width:44px;height:44px;flex-basis:44px;border-radius:13px;font-size:23px}.vjs-spotlight-copy{flex:1 1 calc(100% - 60px)}.vjs-spotlight-button{margin-left:58px}.vijes-spotlight-float{right:10px;bottom:10px;padding:10px 13px}.vijes-spotlight-float b{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.vjs-spotlight-button,.vijes-spotlight-float{transition:none}}
