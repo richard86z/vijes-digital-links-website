@@ -166,23 +166,36 @@
   });
 
   function updateLocations() {
-    const current = locationSelect.value || 'All locations';
+    const current = locationSelect.value || '';
     const places = Array.from(new Set(products.map(function (product) {
       return String(product.country || '').trim();
     }).filter(Boolean))).sort();
-    locationSelect.innerHTML = '<option value="All locations">All locations</option>' +
+    locationSelect.innerHTML = '<option value="">Choose seller country</option>' +
       places.map(function (place) {
         return '<option value="' + escapeHtml(place) + '">' + escapeHtml(place) + '</option>';
       }).join('');
-    locationSelect.value = places.includes(current) ? current : 'All locations';
+    locationSelect.value = places.includes(current) ? current : '';
   }
 
   function render() {
     const query = searchInput.value.trim().toLowerCase();
     const country = locationSelect.value;
+
+    if (!products.length) {
+      count.textContent = 'No approved listings yet';
+      grid.innerHTML = '<div class="vjm-empty"><strong>No approved product listings are currently available.</strong><br>Seller submissions will appear here after review. You can still explore Vijes business services and digital resources below.</div>';
+      return;
+    }
+
+    if (!country) {
+      count.textContent = 'Choose a seller country';
+      grid.innerHTML = '<div class="vjm-empty"><strong>Choose a seller country to browse.</strong><br>The catalogue is filtered by the location recorded on each seller listing. This selection does not independently verify your physical location.</div>';
+      return;
+    }
+
     const visible = products.filter(function (product) {
       const categoryMatch = activeCategory === 'All' || product.category === activeCategory;
-      const countryMatch = country === 'All locations' || product.country === country;
+      const countryMatch = product.country === country;
       const searchable = [
         product.title, product.description, product.category, product.city,
         product.country, product.sellerName
@@ -350,6 +363,21 @@
       address: String(form.get('address') || '').trim(),
       deliveryNote: String(form.get('deliveryNote') || '').trim()
     };
+    const countryKey = function (value) {
+      return String(value || '').trim().toLowerCase().replace(/\\s+/g, ' ');
+    };
+    const selectedMarket = locationSelect.value;
+    const sameCountry = selectedMarket &&
+      countryKey(buyer.country) === countryKey(selectedMarket) &&
+      items.every(function (item) {
+        return countryKey(item.country) === countryKey(selectedMarket) &&
+          countryKey(item.sellerCountry || item.country) === countryKey(selectedMarket);
+      });
+    if (!sameCountry) {
+      errorNode.textContent = 'This checkout is for domestic orders only. Select the seller country and enter a delivery address in that same country. Cross-border orders are not supported through this Cash on Delivery checkout.';
+      errorNode.hidden = false;
+      return;
+    }
     submitButton.disabled = true;
     submitButton.textContent = 'Submitting order…';
     errorNode.hidden = true;
