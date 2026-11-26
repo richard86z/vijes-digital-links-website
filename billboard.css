@@ -53,3 +53,30 @@
 .billboard-live-action{display:inline-flex;align-items:center;gap:6px;margin-top:auto;padding:11px 15px;border-radius:6px;background:#061f35;color:#fff!important;font-size:11px;font-weight:800;text-decoration:none!important}
 .billboard-live-action:hover{background:#174362}
 @media(max-width:700px){.billboard-live-grid{grid-template-columns:1fr}.billboard-live-card{grid-template-columns:1fr}.billboard-live-image{height:210px;min-height:210px}.billboard-live-body{padding:19px}.billboard-live-headline{font-size:22px}}
+
+
+/* Premium campaign presentation refinements */
+.billboard-hero{position:relative;isolation:isolate;overflow:hidden}
+.billboard-hero:before{content:"";position:absolute;z-index:-1;width:620px;height:620px;right:-230px;top:-270px;border-radius:50%;background:radial-gradient(circle,#536df044 0,transparent 68%);pointer-events:none}
+.billboard-hero-copy{position:relative;z-index:1}
+.billboard-proof{gap:10px;flex-wrap:wrap}
+.billboard-proof span{border:1px solid #ffffff28;border-radius:40px;padding:9px 13px;background:#ffffff0a}
+.billboard-hero-art{box-shadow:0 24px 70px #020a1c55}
+.billboard-value{padding:76px 8.5%;background:linear-gradient(135deg,#f7f8fc 0%,#edf1fb 100%);border-top:1px solid #e1e6f0;border-bottom:1px solid #e1e6f0}
+.billboard-value-heading{max-width:760px;margin:0 auto 30px;text-align:center}
+.billboard-value-heading h2{margin:0;color:#101b35;font:800 clamp(30px,4vw,43px)/1.12 Manrope,sans-serif;letter-spacing:-1.3px}
+.billboard-value-heading h2 span{color:#536df0}
+.billboard-value-heading>p:last-child{max-width:620px;margin:14px auto 0;color:#66738b;font-size:13px;line-height:1.85}
+.billboard-value-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:1180px;margin:0 auto}
+.billboard-value-card{padding:25px;border:1px solid #dfe5f0;border-radius:15px;background:#fff;box-shadow:0 12px 36px #1424440a;transition:transform .2s ease,box-shadow .2s ease}
+.billboard-value-card:hover{transform:translateY(-3px);box-shadow:0 18px 42px #14244414}
+.billboard-value-card>span{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;border-radius:10px;background:#e9edff;color:#405bdc;font-size:11px;font-weight:900}
+.billboard-value-card h3{margin:18px 0 8px;color:#101b35;font:800 17px/1.3 Manrope,sans-serif}
+.billboard-value-card p{margin:0;color:#647189;font-size:12px;line-height:1.85}
+.billboard-value-note{max-width:900px;margin:22px auto 0;padding:13px 16px;border-left:3px solid #536df0;background:#ffffffb8;color:#56647b;font-size:11px;line-height:1.8}
+.billboard-listings,.billboard-placements,.billboard-process,.billboard-faq,.billboard-terms{scroll-margin-top:90px}
+.billboard-enquiry-form input:focus,.billboard-enquiry-form select:focus,.billboard-enquiry-form textarea:focus{outline:3px solid #536df033;border-color:#536df0}
+.billboard-submit{min-height:50px;box-shadow:0 10px 24px #536df02b}
+.billboard-submit:focus-visible,.billboard-actions a:focus-visible,.billboard-secondary:focus-visible{outline:3px solid #a8b7ff;outline-offset:3px}
+@media(max-width:800px){.billboard-value{padding:58px 6%}.billboard-value-grid{grid-template-columns:1fr}.billboard-value-card{padding:21px}}
+@media(max-width:520px){.billboard-proof span{font-size:9px;padding:8px 10px}.billboard-value-heading h2{letter-spacing:-.7px}}
