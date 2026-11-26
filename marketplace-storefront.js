@@ -364,7 +364,7 @@
       deliveryNote: String(form.get('deliveryNote') || '').trim()
     };
     const countryKey = function (value) {
-      return String(value || '').trim().toLowerCase().replace(/\\s+/g, ' ');
+      return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
     };
     const selectedMarket = locationSelect.value;
     const sameCountry = selectedMarket &&
