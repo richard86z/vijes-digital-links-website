@@ -106,3 +106,22 @@
   .vjm-remove-button{grid-column:2;justify-self:start}
   .vjm-product-actions{grid-template-columns:1fr}
 }
+
+
+/* Local-market catalogue and business-services hierarchy */
+.vjm-country-note{max-width:1050px;margin:10px auto 0;padding:10px 14px;border-left:3px solid #536df0;background:#f5f7ff;color:#66718a;font-size:10px;line-height:1.75}
+.vjm-search select{cursor:pointer}
+.vjm-list-head{align-items:flex-end}
+.vjm-list-tools span{display:inline-flex;padding:8px 11px;border-radius:30px;background:#eef1ff;color:#354fd0;font-weight:800}
+.market-next-step{display:grid;grid-template-columns:1.35fr .65fr;gap:35px;align-items:center;padding:66px 8.5%;background:linear-gradient(115deg,#101b35 0%,#1b2d55 65%,#263f73 100%);color:#fff}
+.market-next-step .eyebrow{color:#c9f36b}
+.market-next-step h2{max-width:760px;margin:0;color:#fff;font:800 clamp(30px,4vw,44px)/1.12 Manrope,sans-serif;letter-spacing:-1.3px}
+.market-next-step h2 span{color:#c9f36b}
+.market-next-step p:not(.eyebrow){max-width:760px;margin:15px 0 0;color:#d0d9e8;font-size:12px;line-height:1.9}
+.market-next-actions{display:flex;flex-direction:column;align-items:flex-start;gap:17px}
+.market-next-actions .button{box-shadow:0 12px 30px #060d1e55}
+.market-next-actions .market-text-link{color:#e5eaf5;font-size:11px;font-weight:800}
+.market-trust{background:#f5f7fc;border-bottom:1px solid #e6eaf2}
+.market-trust>div{padding-top:22px;padding-bottom:22px}
+@media(max-width:800px){.market-next-step{grid-template-columns:1fr;padding:54px 6%;gap:24px}.market-next-actions{flex-direction:row;flex-wrap:wrap;align-items:center}}
+@media(max-width:520px){.vjm-country-note{font-size:9px}.market-next-step{padding:45px 6%}.market-next-step h2{font-size:30px}}
