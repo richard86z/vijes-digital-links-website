@@ -311,15 +311,26 @@ document.addEventListener('DOMContentLoaded',function(){
         label.textContent='Uploading image…';
         feedback.className='billboard-form-feedback is-pending';
         feedback.textContent='Uploading your selected image securely. Please keep this page open.';
-        // Send the browser File directly as a binary request body. The browser
-        // handles the selected Gallery/Photos file natively; page JavaScript
-        // does not read it, decode it, or convert it to base64.
+        // Send the image using the JSON/base64 format supported by the
+        // Ads Manager API. This matches the existing video upload flow and
+        // avoids raw binary request handling differences across mobile browsers.
+        var imageBase64=await new Promise(function(resolve,reject){
+          var reader=new FileReader();
+          reader.onload=function(){
+            var result=typeof reader.result==='string'?reader.result:'';
+            var encoded=result.split(',')[1]||'';
+            if(encoded)resolve(encoded);else reject(new Error('The selected image could not be read.'));
+          };
+          reader.onerror=function(){reject(new Error('The selected image could not be read.'));
+          };
+          reader.readAsDataURL(imageFile);
+        });
         var imageResponse=await fetch('https://api-v2.appdeploy.ai/app/vijes-ads-manager-y6cp0s/api/public/ad-image',{
           method:'POST',
           mode:'cors',
           credentials:'omit',
-          headers:{'Content-Type':uploadContentType,'Accept':'application/json'},
-          body:imageFile
+          headers:{'Content-Type':'application/json','Accept':'application/json'},
+          body:JSON.stringify({contentType:uploadContentType,base64Data:imageBase64})
         });
         var imageResult=await imageResponse.json().catch(function(){return {};});
         if(!imageResponse.ok||!imageResult.path)throw new Error(imageResult.message||imageResult.error||'Image upload failed.');
