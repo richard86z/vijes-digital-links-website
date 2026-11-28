@@ -116,6 +116,26 @@
 }
 </script>
   <link rel="stylesheet" href="/vijes-spotlight.css">
+<style>
+.ceo-acknowledgement{background:#0b1c32;color:#fff;position:relative;overflow:hidden}
+.ceo-message-panel{max-width:1120px;margin:auto;padding:clamp(26px,5vw,58px);border:1px solid rgba(216,177,83,.65);border-radius:22px;background:linear-gradient(135deg,#102743 0%,#09182b 68%,#102c45 100%);box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative}
+.ceo-message-panel:before{content:"";position:absolute;inset:12px;border:1px solid rgba(216,177,83,.25);border-radius:15px;pointer-events:none}
+.ceo-message-brand{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:34px;color:#e2bd62;font:700 13px Manrope,sans-serif;letter-spacing:1.5px}
+.ceo-message-brand img{width:58px;height:58px;object-fit:contain}
+.ceo-message-brand small{width:100%;margin-left:70px;margin-top:-15px;font-size:9px;letter-spacing:1px;color:#c7b98f}
+.ceo-message-copy{max-width:850px;position:relative}
+.ceo-message-copy .eyebrow{color:#dfb957}
+.ceo-message-copy h2{font:800 clamp(32px,5vw,54px)/1.1 Manrope,sans-serif;color:#e4bd5d;margin:8px 0 12px}
+.ceo-message-copy h2 span{color:#fff}
+.ceo-message-subtitle{font:700 clamp(16px,2.4vw,22px) Manrope,sans-serif;text-transform:uppercase;letter-spacing:.4px}
+.ceo-message-copy>p:not(.eyebrow):not(.ceo-message-subtitle){font-size:clamp(15px,1.7vw,18px);line-height:1.85;color:#edf2f8}
+.ceo-message-copy a{color:#e3bd5f;text-decoration:underline;text-underline-offset:3px}
+.ceo-signoff{display:grid;gap:5px;margin-top:30px;padding-top:22px;border-top:1px solid rgba(222,185,95,.45)}
+.ceo-signoff strong{font:800 clamp(18px,2.4vw,24px) Manrope,sans-serif;color:#e2bd62}
+.ceo-signoff span{font-size:16px;color:#fff}
+@media(max-width:600px){.ceo-message-panel{padding:26px 22px}.ceo-message-brand{margin-bottom:24px}.ceo-message-copy>p:not(.eyebrow):not(.ceo-message-subtitle){line-height:1.75}}
+</style>
+
 </head>
 
 <body>
@@ -133,6 +153,7 @@
 <div class="nav-dropdown"><button class="nav-dropdown-toggle" type="button" aria-haspopup="true">About <span aria-hidden="true">⌄</span></button>
 <div class="nav-dropdown-menu">
 <a href="index.html#about">About Vijes</a>
+<a href="index.html#ceo-acknowledgement">Acknowledgement from the CEO</a>
 <a href="index.html#services">Our Services</a>
 <a href="index.html#revenue-engine">Revenue Engine AI</a>
 <a href="partnerships.html">Partnership Opportunities</a>
@@ -181,6 +202,27 @@
     <p>Vijes Digital Links is a digital services and business support agency helping companies, institutions and growing organisations solve practical challenges and pursue new opportunities.</p>
     <p>We bring together creative, technical, research and operational support so clients can access the capabilities they need without coordinating every task themselves.</p>
     <p>Our work is shaped around each organisation's goals, audience, resources and operating context. We aim to make collaboration clear, delivery dependable and the next step easier to see.</p>
+  </div>
+</section>
+
+<section class="ceo-acknowledgement section" id="ceo-acknowledgement" aria-labelledby="ceo-message-title">
+  <div class="ceo-message-panel">
+    <div class="ceo-message-brand">
+      <img src="logo.svg" alt="Vijes Digital Links logo" loading="lazy">
+      <span>VIJES DIGITAL LINKS</span>
+      <small>CONNECTING BRANDS, PEOPLE, AND POSSIBILITIES</small>
+    </div>
+    <div class="ceo-message-copy">
+      <p class="eyebrow">A MESSAGE OF APPRECIATION</p>
+      <h2 id="ceo-message-title">Acknowledgement <span>from the CEO</span></h2>
+      <p class="ceo-message-subtitle">From the Office of the Founder &amp; CEO</p>
+      <p>At <strong>Vijes Digital Links</strong>, we empower ambitious businesses to scale visibility, accelerate customer acquisition, and drive measurable revenue through strategic digital marketing, <a href="billboard.html">Vijes Billboard</a>, and <a href="marketplace.html">Vijes Marketplace</a>.</p>
+      <p>To our valued clients, partners, and stakeholders—thank you for trusting our vision as we build sustainable digital growth together. Your confidence, collaboration and continued support are deeply appreciated. We look forward to creating meaningful opportunities and building lasting relationships across markets.</p>
+      <div class="ceo-signoff">
+        <strong>Mr. Richard Ikechukwu Nwabueze Iweha</strong>
+        <span>Founder &amp; CEO, Vijes Digital Links</span>
+      </div>
+    </div>
   </div>
 </section>
 
